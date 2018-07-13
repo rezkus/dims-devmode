@@ -19,10 +19,10 @@
 
 /////////////////////////////////////////////////////////////NOTE//////////////////////////////////////////////////////////////
 
-// TODO: Read hanya untuk salah satu atribut yang dimiliki owner tertentu [CLIENT SIDE]
-//			 		read_owner_attribute(stub, args)			ARGS = Owner ID + Key Atribut yang mau dicek (isStudent/isAgeOver18/isGPAOver3)
+// done: Read hanya untuk salah satu atribut yang dimiliki owner tertentu [CLIENT SIDE]
+//			 		read_owner_attribute(stub, args)			ARGS = Identity ID + Key Atribut yang mau dicek (isStudent/isAgeOver18/isGPAOver3)
 // TODO: Update identity attribute yang dimiliki owner tertentu [CLIENT SLIDE]
-//					update_owner_attribute(stub, args)		ARGS = Owner ID + Key Atribut yang mau diupdate + Value atribute yang mau diupdate
+//					update_owner_attribute(stub, args)		ARGS = Identity ID + Key Atribut yang mau diupdate + Value atribute yang mau diupdate
 
 // QUESTION: 	Bagaimana soal hak akses CRUD? User certificate?
 // ANSWER:	 	Coba baca tentang endorsement policies (http://hyperledger-fabric.readthedocs.io/en/release-1.1/endorsement-policies.html)
@@ -190,8 +190,12 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return init_owner(stub, args)
 	} else if function == "read_everything" { //read everything, (owners  + identitie]es + companies)
 		return read_everything(stub)
-	} else if function == "get_attribute" { //read everything, (owners  + identitie]es + companies)
-		return get_attribute(stub, args)
+	} else if function == "read_attribute" { //read everything, (owners  + identitie]es + companies)
+		return read_attribute(stub, args)
+	} else if function == "update_attribute" { //read everything, (owners  + identitie]es + companies)
+		return update_attribute(stub, args)
+	} else if function == "sign_attribute" { //read everything, (owners  + identitie]es + companies)
+		return sign_attribute(stub, args)
 	}
 
 	// error out
@@ -327,6 +331,54 @@ func read_everything(stub shim.ChaincodeStubInterface) pb.Response {
 	return shim.Success(everythingAsBytes)
 }
 
+// ============================================================================================================================
+// read Attribute By Identity - read 1 specific attribute of 1 identity (based on Identity.id). No return output, just read
+// args[0] = identity.id
+// args[1] = identity.IDAttribute.IDKey
+// ============================================================================================================================
+
+func read_attribute(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// var identity Identity
+	// var err error
+	// var int
+	//iFound := 0
+	fmt.Println("starting read_attribute")
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	identityId := args[0]
+	idKey := args[1]
+
+	funcArgs := []string{identityId, idKey}
+	var idAttribute IDAttribute
+	var err error
+	idAttribute, err = get_attribute(stub, funcArgs)
+	if err != nil {
+		fmt.Println("Failed to find attribute of identityId: " + identityId + ", and idKey: " + idKey )
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println("Printing results ...")
+	fmt.Println(idAttribute)
+	// var fetchedIdentity IdentityValue
+	// json.Unmarshal(queryValAsBytes, &fetchedIdentity)
+	// fmt.Println("Fetched IDAttribu")
+
+	fmt.Println()
+	fmt.Println("Converting fetched IDAttribute to bytes")
+	idAttributeAsBytes, _ := json.Marshal(idAttribute)
+
+	//end function
+	fmt.Println()
+	fmt.Println("- end read_attribute identity, return payload success")
+	return shim.Success(idAttributeAsBytes)
+
+	//---
+
+}
+
 ////////////////////////////////////////////////////COPU OF WRITE_LEDGER.GO///////////////////////////////////////////////////
 
 // ============================================================================================================================
@@ -404,19 +456,20 @@ func init_identity(stub shim.ChaincodeStubInterface, args []string) pb.Response 
 	identity.Id = args[0]
 	identity.Owner.Id = args[1]
 	identity.Owner.Company = args[2]
-	fmt.Println("tes before loop")
+	//fmt.Println("tes before loop")
 
 	var attr IDAttribute
 	attr.ObjectType = "identity_attribute"
+	attr.IDSignature = "noSig"
 	for i := 3; i < 9; i++ {
-		fmt.Println("masuk loop, i = ", + i)
+		//fmt.Println("masuk loop, i = ", + i)
 		if i%2 != 0 {
-			fmt.Println("i ganjil")
+			//fmt.Println("i ganjil")
 			attr.IDKey = args[i]
 			// identity.IDAttribute[(i-3)/2].ObjectType = "identity_attribute"
 			// identity.IDAttribute[(i-3)/2].IDKey = args[i]
 		} else {
-			fmt.Println("i genap")
+			//fmt.Println("i genap")
 			attr.IDValue = args[i]
 			identity.IDAttribute = append(identity.IDAttribute, attr)
 			// identity.IDAttribute[(i-4)/2].IDValue = args[i]
@@ -568,7 +621,7 @@ func set_owner(stub shim.ChaincodeStubInterface, args []string) pb.Response {
 	var authed_by_company = args[2]
 	fmt.Println(identity_id + "->" + new_owner_id + " - |" + authed_by_company)
 
-	// check if user already exists
+	// check if owner already exists
 	owner, err := get_owner(stub, new_owner_id)
 	if err != nil {
 		return shim.Error("This owner does not exist - " + new_owner_id)
@@ -640,56 +693,174 @@ func get_owner(stub shim.ChaincodeStubInterface, id string) (Owner, error) {
 }
 
 // ============================================================================================================================
-// Get Attribute By Identity - get 1 specific attribute of 1 identity (based on Identity.id)
-// args[1] = identity.id
-// args[2] = identity.IDAttribute.IDKey
+// get Attribute By Identity - read 1 specific attribute of 1 identity (based on Identity.id). Returning Identity.IDAttribute[i]
+// args[0] = identity.id
+// args[1] = identity.IDAttribute.IDKey
+//
+// output = Identity.IDAttribute[iFound]
 // ============================================================================================================================
 
-func get_attribute(stub shim.ChaincodeStubInterface, args []string) pb.Response {
-	// var identity Identity
+func get_attribute(stub shim.ChaincodeStubInterface, args []string) (IDAttribute, error) {
+	var idAttribute IDAttribute
 	// var err error
 	// var int
-	iFound := 0
+	iFound := -999
 	fmt.Println("starting get_attribute")
 
 	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
+		return idAttribute, errors.New("Wrong argument count, expecting 2")
 	}
 
 	identityId := args[0]
 	idKey := args[1]
 
 	//Getting identity by ID
-	fmt.Println("getting identity by args 1 ID")
+	fmt.Println("getting identity by id " + identityId)
 	identity, err := get_identity(stub, identityId)
 
  	if err!=nil {
-	 	fmt.Println("Error on get_identity")
-	 	return shim.Error(err.Error())
+	 	// fmt.Println("Error on get_identity")
+	 	// return shim.Error(err.Error())
+		return idAttribute, errors.New("Error on get_identity")
  	}
 	//Getting attribute args[2] based on fetched identity
-	fmt.Println("Getting identity attribute on " + identity.Id + "of" + identity.Owner.Username)
+	fmt.Println("Reading identity attribute on " + identity.Id)
 	for i := range identity.IDAttribute {
 		if identity.IDAttribute[i].IDKey == idKey {
 			// return identity.IDAttribute[i], nil
-			fmt.Println("Found matching idKey (arg[2])")
+			fmt.Println("Found matching idKey on args[" + strconv.Itoa(i) +"]")
 			iFound = i
 		}
 	}
 
-	fmt.Println("Printing results ...")
-	fmt.Println(identity.IDAttribute[iFound])
-	// var fetchedIdentity IdentityValue
-	// json.Unmarshal(queryValAsBytes, &fetchedIdentity)
-	// fmt.Println("Fetched IDAttribu")
+	if iFound != -999 {
+		idAttribute = identity.IDAttribute[iFound]
+	} else {
+		return idAttribute, errors.New("IDKey not found in array list")
+	}
 
-	fmt.Println("Converting fetched IDAttribute to bytes")
-	idAttributeAsBytes, _ := json.Marshal(identity.IDAttribute[iFound])
+	fmt.Println("Returning results ...")
+	return idAttribute, nil
+}
 
-	//end function
-	fmt.Println("- end get_attribute identity")
-	return shim.Success(idAttributeAsBytes)
+// ============================================================================================================================
+// Update Attribute By Identity - Update 1 specific attribute of 1 identity (based on Identity.id). Accept parameter [isIssuer] to validate if the invoker is truly issuer
+// args[0] = identity.id
+// args[1] = identity.IDAttribute.IDKey
+// args[2] = new value of args[1]
+// args[3] = isIssuer
+// ============================================================================================================================
+func update_attribute(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	var err error
+	fmt.Println("starting update_attribute")
 
+	if len(args) != 4 {
+		return shim.Error("Incorrect number of arguments. Expecting 4")
+	}
+
+	identityId := args[0]
+	idKey := args[1]
+	newValue := args[2]
+	isIssuer := args[3]
+
+	fmt.Println("Changing value of " + idKey + " on identity " + identityId + " to " + newValue)
+
+	var identity Identity
+
+	//getting requested identity
+	identity, err = get_identity(stub, identityId)
+	if err!=nil {
+	 	fmt.Println("Error on get_identity")
+	 	return shim.Error(err.Error())
+ 	}
+
+	// get the relevant [i] using idKey matching
+	iFound := -999
+	fmt.Println("Reading identity attribute on " + identity.Id)
+	for i := range identity.IDAttribute {
+		if identity.IDAttribute[i].IDKey == idKey {
+			// return identity.IDAttribute[i], nil
+			fmt.Println("Found matching idKey on i = " + strconv.Itoa(i))
+			iFound = i
+		}
+	}
+
+	if iFound != -999 {
+		if isIssuer == "true" {
+			fmt.Println("Changing value of IDValue from " + identity.IDAttribute[iFound].IDValue + " to " + newValue)
+			identity.IDAttribute[iFound].IDValue = newValue
+			jsonAsBytes, _ := json.Marshal(identity)
+			err = stub.PutState(args[0], jsonAsBytes)
+			if err != nil {
+				return shim.Error(err.Error())
+			}
+		} else {  //not an issuer
+			fmt.Println("Request rejected, not an issuer")
+			return shim.Error(err.Error())
+		} //endif isIssuer
+
+	} else { //IDKey not found
+		fmt.Println("IDKey not found on array list")
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println("- end update_attribute")
+	return shim.Success(nil)
+}
+
+// ============================================================================================================================
+// Sign Attribute By Identity - Sign 1 specific attribute of 1 identity (based on Identity.id). Accept parameter [isIssuer] to validate if the invoker is truly issuer
+// args[0] = identity.id
+// args[1] = identity.IDAttribute.IDKey
+// args[2] = issuer name
+// args[3] = issuer company
+// ============================================================================================================================
+func sign_attribute (stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	fmt.Println("starting sign_attribute")
+
+  if len(args) != 4 {
+ 	 return shim.Error("Incorrect number of arguments. Expecting 4")
+  }
+
+	identityId := args[0]
+	idKey := args[1]
+	issuerName := args[2]
+	issuerCompany := args[3]
+
+	//getting requested identity
+	var identity Identity
+	identity, err = get_identity(stub, identityId)
+	if err!=nil {
+		fmt.Println("Error on get_identity")
+		return shim.Error(err.Error())
+	}
+
+	// get the relevant [i] using idKey matching
+	iFound := -999
+	fmt.Println("Reading identity attribute on " + identity.Id)
+	for i := range identity.IDAttribute {
+		if identity.IDAttribute[i].IDKey == idKey {
+			// return identity.IDAttribute[i], nil
+			fmt.Println("Found matching idKey on i = " + strconv.Itoa(i))
+			iFound = i
+		}
+	}
+
+	signature := "Signed by " + issuerName + " from " + issuerCompany
+	if iFound != -999 {
+		identity.IDAttribute[iFound].IDSignature = signature
+		jsonAsBytes, _ := json.Marshal(identity)
+		err = stub.PutState(args[0], jsonAsBytes)
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+	} else {
+		fmt.Println("IDKey not found on array list")
+		return shim.Error(err.Error())
+	}
+
+	fmt.Println("- end sign_attribute")
+	return shim.Success(nil)
 }
 
 // ========================================================
@@ -706,7 +877,3 @@ func sanitize_arguments(strs []string) error {
 	}
 	return nil
 }
-
-// func key_dictionary(idKey string) error {
-// 	switch idKey
-// }
