@@ -829,7 +829,7 @@ func sign_attribute (stub shim.ChaincodeStubInterface, args []string) pb.Respons
 
 	//getting requested identity
 	var identity Identity
-	identity, err = get_identity(stub, identityId)
+	identity, err := get_identity(stub, identityId)
 	if err!=nil {
 		fmt.Println("Error on get_identity")
 		return shim.Error(err.Error())
