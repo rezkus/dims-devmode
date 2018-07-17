@@ -21,7 +21,7 @@
 
 // done: Read hanya untuk salah satu atribut yang dimiliki owner tertentu [CLIENT SIDE]
 //			 		read_owner_attribute(stub, args)			ARGS = Identity ID + Key Atribut yang mau dicek (isStudent/isAgeOver18/isGPAOver3)
-// done: Update identity attribute yang dimiliki owner tertentu [CLIENT SLIDE]
+// TODO: Update identity attribute yang dimiliki owner tertentu [CLIENT SLIDE]
 //					update_owner_attribute(stub, args)		ARGS = Identity ID + Key Atribut yang mau diupdate + Value atribute yang mau diupdate
 
 // QUESTION: 	Bagaimana soal hak akses CRUD? User certificate?
