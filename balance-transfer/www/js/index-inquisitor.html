@@ -34,7 +34,12 @@
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1">Toggle navigation </button>
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
 			<a class="navbar-brand" href="#">Hyperledger Fabric Identity Application</a>
 		</div>
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -81,68 +86,51 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
-			<h1 class="text-center">Identity Owner</h1>
+			<h1 class="text-center">Identity Inquisitor</h1>
 		</div>
 	</div>
 	<hr>
 </div>
 <div class="container">
+    <div class="row">
+		<h4>New Identity Attribute Request</h4>
+    </div>
+	<form role="form" onSubmit="return requestAttribute()">
+		<div class="row">
+			<div class="form-group col-md-3">
+				<label for="username">Username</label>
+				<input type="text" class="form-control" id="username" placeholder="Enter username">
+			</div>
+			<div class="form-group col-md-3">
+				<label for="attribute">Identity Attribute</label>
+				<input type="text" class="form-control" id="attribute" placeholder="Enter identity attribute">
+			</div>
+			<div class="form-group col-md-4">
+				<label for="details">Details</label>
+				<input type="text" class="form-control" id="details" placeholder="Enter details">
+			</div>
+			<div class="form-group col-md-2">
+				<br>
+				<button type="submit" class="btn btn-info" href="#">Send Request</button>
+			</div>
+		</div>
+	</form>
+    <hr>
 	<div class="row">
-		<h4>User Identity</h4>
-	</div>
-	<div class="row table-hover">
-		<table id="identity-table" class="table table-hover">
+		<h4>Identity Attribute Request</h4>
+    </div>
+	<div class="row">
+		<table id="identity-request-table" class="table table-hover table-bordered">
 			<thead>
 				<tr>
-				<th>No.</th>
-				<th>Identity Key</th>
-				<th>Value</th>
-				<th>Actions</th>
+					<th class="col-md-1">No.</th>
+					<th class="col-md-3">Username</th>
+					<th class="col-md-4">Identity Attribute</th>
+					<th class="col-md-2">Status</th>
+					<th class="col-md-2">Result</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1.</td>
-					<td>ID</td>
-					<td>rezha123</td>
-					<td>
-						<div class="row">
-							<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdate()">
-								<input type="text" class="form-inline" id="new-value" placeholder="Enter new value">
-								<button type="submit" class="btn btn-sm btn-info">Update</button>
-							</form>
-							<button type="button" id="update-button" class="btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
-							<button type="button" id="sign-button" class="btn btn-sm btn-default">Request Sign</button>
-						</div>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	<hr>
-	<div class="row table-responsive">
-		<h4>Identity Request</h4>
-	</div>
-	<div class="row">
-		<table id="id-request-table" class="table table-hover">
-			<thead>
-				<tr>
-					<th>No.</th>
-					<th>Identity</th>
-					<th>Requester</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>1.</td>
-					<td>ID</td>
-					<td>rezha123</td>
-					<td>
-						<button type="button" class="btn btn-sm btn-success">Accept</button>
-						<button type="button" class="btn btn-sm btn-danger">Decline</button>
-					</td>
-				</tr>
 			</tbody>
 		</table>
 	</div>
@@ -156,12 +144,6 @@
 
 <script src="angularApp.js"></script>
 <script src="js/firebaseFunction.js"></script>
-<script>
-	function showUpdateForm() {
-		document.getElementById("update-button").style.display = "none";
-		document.getElementById("update-form").style.display = "inline";
-	}
-</script>
 
 </body>
 </html>

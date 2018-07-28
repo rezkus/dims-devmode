@@ -90,14 +90,14 @@
 	<div class="row">
 		<h4>User Identity</h4>
 	</div>
-	<div class="row table-hover">
-		<table id="identity-table" class="table table-hover">
+	<div class="row">
+		<table id="identity-table" class="table table-hover table-bordered">
 			<thead>
 				<tr>
-				<th>No.</th>
-				<th>Identity Key</th>
-				<th>Value</th>
-				<th>Actions</th>
+				<th class="col-md-1">No.</th>
+				<th class="col-md-4">Identity Key</th>
+				<th class="col-md-4">Value</th>
+				<th class="col-md-3">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -106,31 +106,29 @@
 					<td>ID</td>
 					<td>rezha123</td>
 					<td>
-						<div class="row">
-							<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdate()">
-								<input type="text" class="form-inline" id="new-value" placeholder="Enter new value">
-								<button type="submit" class="btn btn-sm btn-info">Update</button>
-							</form>
-							<button type="button" id="update-button" class="btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
-							<button type="button" id="sign-button" class="btn btn-sm btn-default">Request Sign</button>
-						</div>
+						<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdate()">
+							<input type="text" class="form-inline" id="new-value" placeholder="Enter new value">
+							<button type="submit" class="btn btn-sm btn-info">Update</button>
+						</form>
+						<button type="button" id="update-button" class="btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
+						<button type="button" id="sign-button" class="btn btn-sm btn-default" onClick="return requestAttributeSign()">Request Sign</button>
 					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 	<hr>
-	<div class="row table-responsive">
+	<div class="row">
 		<h4>Identity Request</h4>
 	</div>
 	<div class="row">
-		<table id="id-request-table" class="table table-hover">
+		<table id="id-request-table" class="table table-hover table-bordered">
 			<thead>
 				<tr>
-					<th>No.</th>
-					<th>Identity</th>
-					<th>Requester</th>
-					<th>Actions</th>
+					<th class="col-md-1">No.</th>
+					<th class="col-md-4">Attribute</th>
+					<th class="col-md-4">Requester</th>
+					<th class="col-md-3">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
