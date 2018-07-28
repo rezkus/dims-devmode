@@ -110,4 +110,4 @@ PeerOrgs:
       SANS:
         - "localhost"
     Users:
-      Count: 1
+      Count: 4

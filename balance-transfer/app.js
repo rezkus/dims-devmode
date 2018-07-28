@@ -27,6 +27,7 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var bearerToken = require('express-bearer-token');
 var cors = require('cors');
+var path = require('path');
 
 require('./config.js');
 var hfc = require('fabric-client');
@@ -51,6 +52,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
 	extended: false
 }));
+
+// set up a static file server that points to the "client" directory
+app.use(express.static(path.join(__dirname, './www')));
+
+
 // set secret variable
 app.set('secret', 'thisismysecret');
 app.use(expressJWT({
@@ -121,7 +127,8 @@ app.post('/users', async function(req, res) {
 		return;
 	}
 	var token = jwt.sign({
-		exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+		 exp: Math.floor(Date.now() / 1000) + parseInt(hfc.getConfigSetting('jwt_expiretime')),
+		//exp: parseInt(hfc.getConfigSetting('jwt_expiretime')),
 		username: username,
 		orgName: orgName
 	}, app.get('secret'));
