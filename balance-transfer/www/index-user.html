@@ -29,7 +29,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
 
 </head>
-<body>
+<body ng-app="app" ng-controller="appController">
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -106,12 +106,12 @@
 					<td>ID</td>
 					<td>rezha123</td>
 					<td>
-						<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdate()">
+						<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdateToIssuer()">
 							<input type="text" class="form-inline" id="new-value" placeholder="Enter new value">
 							<button type="submit" class="btn btn-sm btn-info">Update</button>
 						</form>
 						<button type="button" id="update-button" class="btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
-						<button type="button" id="sign-button" class="btn btn-sm btn-default" onClick="return requestAttributeSign()">Request Sign</button>
+						<button type="button" id="sign-button" class="btn btn-sm btn-default" onClick="return requestAttributeSignToIssuer()">Request Sign</button>
 					</td>
 				</tr>
 			</tbody>
@@ -122,7 +122,7 @@
 		<h4>Identity Request</h4>
 	</div>
 	<div class="row">
-		<table id="id-request-table" class="table table-hover table-bordered">
+		<table id="owner-id-request-table" class="table table-hover table-bordered">
 			<thead>
 				<tr>
 					<th class="col-md-1">No.</th>
@@ -132,15 +132,6 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1.</td>
-					<td>ID</td>
-					<td>rezha123</td>
-					<td>
-						<button type="button" class="btn btn-sm btn-success">Accept</button>
-						<button type="button" class="btn btn-sm btn-danger">Decline</button>
-					</td>
-				</tr>
 			</tbody>
 		</table>
 	</div>

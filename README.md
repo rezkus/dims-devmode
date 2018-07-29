@@ -73,6 +73,8 @@ peer chaincode invoke -n mycc -c '{"Args":["update_attribute", "i123", "isAgeOve
 <sign_attribute>
 peer chaincode invoke -n mycc -c '{"Args":["sign_attribute", "i123", "isAgeOver18", "Pak Dadang", "STEI ITB"]}' -C myc
 
+<read_identity_by_owner_id>
+peer chaincode invoke -n mycc -c '{"Args":["read_identity_by_owner_id", "o321"]}' -C myc
 
 
 

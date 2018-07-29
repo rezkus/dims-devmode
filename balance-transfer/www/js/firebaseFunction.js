@@ -1,14 +1,18 @@
 var db = firebase.database();
 var lembaga = "Lembaga Bukan ITB";
+var userTerkait = "hehe";
 //const ref = database.ref('items');
 
 // INI CUMA JALAN DI INQUISITOR
-readSentRequest();
+// readSentRequest();
 
-// IDENTITY OWNER SIDE
-function requestAttributeUpdate() {
+// INI CUMA JALAN DI USER
+readRequestFromInquisitor();
+
+////====================================================================================  IDENTITY OWNER SIDE
+function requestAttributeUpdateToIssuer() {
 	var newValue = document.getElementById("new-value").value;
-	
+
 	var result = db.ref("attribute-change-request").push({
 		type: "update",
 		identityID: "i123",
@@ -26,7 +30,7 @@ function requestAttributeUpdate() {
 	});
 }
 
-function requestAttributeSign() {
+function requestAttributeSignToIssuer() {
 	var result = db.ref("attribute-change-request").push({
 		type: "sign",
 		identityID: "i123",
@@ -41,13 +45,33 @@ function requestAttributeSign() {
 	});
 }
 
+function readRequestFromInquisitor() {
+	var table = document.getElementById("owner-id-request-table").tBodies[0];
+	var ref = db.ref("attribute-request");
 
-// INQUISITOR SIDE
-function requestAttribute() {
+	ref.on("value", function(data){
+		table.innerHTML = "";
+		var objKey = Object.keys(data.val());
+		var i = 1;
+		for (var obj in objKey) {
+			var key = objKey[obj];
+			if (data.val()[key].requestTo === userTerkait) {
+				table.innerHTML += "<tr><td>" + i + ".</td><td ng-model='attribute_key'>" + data.val()[key].attrName + "</td><td>" +
+					data.val()[key].requestFrom + "</td><td><button type='button' class='btn btn-sm btn-success' ng-click="acceptRequestFromInquisitor()">Accept</button><button type='button' class='btn btn-sm btn-danger' ng-Click='declineRequestFromInquisitor()'>Decline</button></td></tr>";
+				i++;
+			}
+		}
+	});
+}
+
+
+
+//====================================================================================  INQUISITOR SIDE
+function requestAttributeToOwner() {
 	var username = document.getElementById("username").value;
 	var attr = document.getElementById("attribute").value;
 	var details = document.getElementById("details").value;
-	
+
 	var result = db.ref("attribute-request").push({
 		requestFrom: lembaga,
 		requestTo: username,
@@ -67,7 +91,7 @@ function requestAttribute() {
 function readSentRequest() {
 	var table = document.getElementById("identity-request-table").tBodies[0];
 	var ref = db.ref("attribute-request");
-	
+
 	ref.on("value", function(data){
 		table.innerHTML = "";
 		var objKey = Object.keys(data.val());

@@ -190,12 +190,14 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface) pb.Response {
 		return init_owner(stub, args)
 	} else if function == "read_everything" { //read everything, (owners  + identitie]es + companies)
 		return read_everything(stub)
-	} else if function == "read_attribute" { //read everything, (owners  + identitie]es + companies)
+	} else if function == "read_attribute" {
 		return read_attribute(stub, args)
-	} else if function == "update_attribute" { //read everything, (owners  + identitie]es + companies)
+	} else if function == "update_attribute" {
 		return update_attribute(stub, args)
-	} else if function == "sign_attribute" { //read everything, (owners  + identitie]es + companies)
+	} else if function == "sign_attribute" {
 		return sign_attribute(stub, args)
+	} else if function == "read_identity_by_owner_id" {
+		return read_identity_by_owner_id(stub, args)
 	}
 
 	// error out
@@ -374,10 +376,108 @@ func read_attribute(stub shim.ChaincodeStubInterface, args []string) pb.Response
 	fmt.Println()
 	fmt.Println("- end read_attribute identity, return payload success")
 	return shim.Success(idAttributeAsBytes)
-
-	//---
-
 }
+
+// ============================================================================================================================
+// read Identity By Owner.Id - read 1 identity based on the owner ID
+// args[0] = owner_id
+//
+// Output: JSON of Identity
+// ============================================================================================================================
+
+func read_identity_by_owner_id(stub shim.ChaincodeStubInterface, args []string) pb.Response {
+	// type Everything struct {
+	// 	Owners     []Owner    `json:"owners"`
+	// 	Identities []Identity `json:"identities"`
+	// }
+	//var everything Everything
+
+	fmt.Println("Starting read_identity_by_owner_id")
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments, expecting 1")
+	}
+
+
+	// // ---- Check if owner with ID = owner_id exists ---- //
+
+	// ownersIterator, err := stub.GetStateByRange("o0", "o9999999999999999999")
+	// if err != nil {
+	// 	return shim.Error(err.Error())
+	// }
+	// defer ownersIterator.Close()
+	//
+	// for ownersIterator.HasNext() {
+	// 	aKeyValue, err := ownersIterator.Next()
+	// 	if err != nil {
+	// 		return shim.Error(err.Error())
+	// 	}
+	// 	queryKeyAsStr := aKeyValue.Key
+	// 	queryValAsBytes := aKeyValue.Value
+	// 	fmt.Println("on owner id - ", queryKeyAsStr)
+	// 	var owner Owner
+	// 	json.Unmarshal(queryValAsBytes, &owner) //un stringify it aka JSON.parse()
+	//
+	// 	if (owner.Id == owner_id) {                                        //only return enabled owners
+	// 		ownerFound = true
+	// 	}
+	// }
+	//
+	// if (ownerFound == false){
+	// 	shim.Error ("Owner with ID = " + owner_id + "doesn't exist")
+	// } else {
+	// }
+	var fetchedIdentity Identity
+	owner_id := args[0]
+	ownerFound := false
+	fetchedIdentityID := ""
+
+	// ---- Get Identity ---- //
+	resultsIterator, err := stub.GetStateByRange("i0", "i9999999999999999999")
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	defer resultsIterator.Close()
+
+	for resultsIterator.HasNext() {
+		aKeyValue, err := resultsIterator.Next()
+		if err != nil {
+			return shim.Error(err.Error())
+		}
+		//queryKeyAsStr := aKeyValue.Key
+		queryValAsBytes := aKeyValue.Value
+		//fmt.Println("on identity id - ", queryKeyAsStr)
+		var identity Identity
+		json.Unmarshal(queryValAsBytes, &identity)           //func Unmarshal(data []byte, v interface{}) error. un stringify it aka JSON.parse()
+
+		if (identity.Owner.Id == owner_id) {
+			fetchedIdentityID = identity.Id
+			ownerFound = true
+		}
+	}
+
+	if !ownerFound {
+		return shim.Error("Owner with ID = " + owner_id + " doesn't have identity or doesnt exist")
+	} else { //owner exists
+
+		fmt.Println("Owner ID " + owner_id + " possess Identity with ID: " + fetchedIdentityID)
+		//getting requested identity
+		fetchedIdentity, err = get_identity(stub, fetchedIdentityID)
+		if err!=nil {
+		 	fmt.Println("Error on get_identity")
+		 	return shim.Error(err.Error())
+	 	}
+	}
+
+	fmt.Print("Fetched Identity of " + owner_id + " - ")
+	fmt.Println(fetchedIdentity)
+
+	identityAsBytes, _ := json.Marshal(fetchedIdentity)
+
+	return shim.Success(identityAsBytes)
+}
+
+
 
 ////////////////////////////////////////////////////COPU OF WRITE_LEDGER.GO///////////////////////////////////////////////////
 

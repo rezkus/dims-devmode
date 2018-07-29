@@ -29,7 +29,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
 
 </head>
-<body>
+<body ng-app="app" ng-controller="appController">
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -95,7 +95,7 @@
     <div class="row">
 		<h4>New Identity Attribute Request</h4>
     </div>
-	<form role="form" onSubmit="return requestAttribute()">
+	<form role="form" onSubmit="return requestAttributeToOwner()">
 		<div class="row">
 			<div class="form-group col-md-3">
 				<label for="username">Username</label>
