@@ -35,34 +35,34 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------init owner
-  $scope.init_owner = function() {
+  $scope.init_owner = function(owner_id, owner_username, owner_company) {
     console.log("init_owner() is running");
     var token = sessionStorage.getItem("org1_token");
-    var owner_id = $scope.xxx;
-    var owner_username = $scope.xxx;
-    var owner_company = $scope.xxx;
+    // var owner_id = $scope.icr_owner_id;
+    // var owner_username = $scope.icr_owner_name;
+    // var owner_company = $scope.icr_owner_company;
 
     appFactory.init_owner(owner_id, owner_username, owner_company, token, function(data){
-      alert(data);
+      alert("init owner success");
     });
   }
 
   //---------init identity
-  $scope.init_identity = function() {
+  $scope.init_identity = function(identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3) {
     console.log("init_identity() is running");
     var token = sessionStorage.getItem("org1_token");
-    var identity_id = $scope.xxx;
-    var owner_id = $scope.xxx;
-    var auth_company = $scope.xxx;
-    var attrKey1 = $scope.xxx;
-    var attrVal1 = $scope.xxx;
-    var attrKey2 = $scope.xxx;
-    var attrVal2 = $scope.xxx;
-    var attrKey3 = $scope.xxx;
-    var attrVal3 = $scope.xxx;
+    // var identity_id = $scope.icr_identity_id;
+    // var owner_id = $scope.icr_owner_id;
+    // var auth_company = $scope.icr_owner_company;
+    // var attrKey1 = $scope.icr_attr_key_1;
+    // var attrVal1 = $scope.icr_attr_value_1;
+    // var attrKey2 = $scope.icr_attr_key_2;
+    // var attrVal2 = $scope.icr_attr_value_2;
+    // var attrKey3 = $scope.icr_attr_key_3;
+    // var attrVal3 = $scope.icr_attr_value_3;
 
     appFactory.init_identity(identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3, token, function(data){
-
+      alert("init identity success");
     });
   }
 
@@ -204,7 +204,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -224,7 +224,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -244,7 +244,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -264,7 +264,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -284,7 +284,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -304,7 +304,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -324,7 +324,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
@@ -332,26 +332,26 @@ app.factory('appFactory', function($http){
     //-----------------------------END OF INVOKE CHAINCODE------------------------------------
     //----------------------------------------------------------------------------------------
 
-    // ================== acceptRequestFromInquisitor
-    factory.acceptRequestFromInquisitor = function(identity_id, attribute_key, token, callback){
-      $http({
-        method: 'POST',
-        url: '/channels/mychannel/chaincode/mycc',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer ' + token
-        },
-        data: $.param({
-          'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
-          'fcn':'read_attribute',
-          'args':[identity_id, attribute_key]
-        })
-      }).success(function (response){
-          console.log(response);
-          //kirim response ke inquisitor table
-          //status request inquisitor jadi success
-      });
-    }
+    // // ================== acceptRequestFromInquisitor
+    // factory.acceptRequestFromInquisitor = function(identity_id, attribute_key, token, callback){
+    //   $http({
+    //     method: 'POST',
+    //     url: '/channels/mychannel/chaincode/mycc',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       'authorization': 'Bearer ' + token
+    //     },
+    //     data: $.param({
+    //       'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
+    //       'fcn':'read_attribute',
+    //       'args':[identity_id, attribute_key]
+    //     })
+    //   }).success(function (response){
+    //       console.log(response);
+    //       //kirim response ke inquisitor table
+    //       //status request inquisitor jadi success
+    //   });
+    // }
 
   return factory;
 });

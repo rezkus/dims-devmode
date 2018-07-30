@@ -29,7 +29,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
 
 </head>
-<body ng-app="app" ng-controller="appController">
+<body id="appController" ng-app="app" ng-controller="appController">
 <nav class="navbar navbar-inverse">
 	<div class="container-fluid">
 		<!-- Brand and toggle get grouped for better mobile display -->
@@ -96,32 +96,43 @@
 		<h4>Identity Creation Request</h4>
 	</div>
 	<div class="row">
-		<table id="identity-table" class="table table-hover table-bordered">
+		<table id="identity-creation-table" class="table table-hover table-bordered table-responsive">
 			<thead>
 				<tr>
-				<th class="col-md-1">No.</th>
-				<th class="col-md-4">Owner Name</th>
-        <th class="col-md-4">Owner Company</th>
-        <th class="col-md-4">Attribute Key #1</th>
-        <th class="col-md-4">Attribute Value #1</th>
-        <th class="col-md-4">Attribute Key #2</th>
-        <th class="col-md-4">Attribute Value #2</th>
-        <th class="col-md-4">Attribute Key #3</th>
-        <th class="col-md-4">Attribute Value #3</th>				
-        <th class="col-md-3">Actions</th>
+				<th>No.</th>
+				<th>Owner ID</th>
+				<th>Owner Name</th>
+				<th>Owner Company</th>
+				<th>Identity ID</th>
+				<th>Attr. Key #1</th>
+				<th>Attr. Value #1</th>
+				<th>Attr. Key #2</th>
+				<th>Attr. Value #2</th>
+				<th>Attr. Key #3</th>
+				<th>Attr. Value #3</th>
+				<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
+<!--
 				<tr>
 					<td>1.</td>
-					<td>ID</td>
-					<td>rezha123</td>
+					<td class="icr-owner-id"><input type="text" class="form-inline" id="new-value" placeholder="Enter owner ID"></td>
+					<td class="icr-owner-name">Rezha</td>
+					<td class="icr-owner-company">ITB</td>
+					<td class="icr-identity-id"><input type="text" class="form-inline" id="new-value" placeholder="Enter identity ID"></td>
+					<td class="icr-attr-key-1"></td>
+					<td class="icr-attr-value-1"></td>
+					<td class="icr-attr-key-2"></td>
+					<td class="icr-attr-value-2"></td>
+					<td class="icr-attr-key-3"></td>
+					<td class="icr-attr-value-3"></td>
 					<td>
-					  <button type="button" id="detail-button" class="btn btn-sm btn-default">Show Details</button>
-					  <button type="button" class="btn btn-sm btn-success">Accept</button>
-					  <button type="button" class="btn btn-sm btn-danger">Decline</button>
+					  <button type="button" class="btn btn-sm btn-success icr-button-accept">Accept</button>
+					  <button type="button" class="btn btn-sm btn-danger icr-button-decline">Decline</button>
 					</td>
 				</tr>
+-->
 			</tbody>
 		</table>
 	</div>
@@ -163,7 +174,7 @@
 </div>
 
 <script src="angularApp.js"></script>
-<script src="js/firebaseFunction.js"></script>
+<script src="js/issuer.js"></script>
 
 </body>
 </html>

@@ -87,6 +87,51 @@
 	<hr>
 </div>
 <div class="container">
+	<div class="init-new-identity-form">
+		<div class="row">
+			<h4>Init New Identity Form</h4>
+		</div>
+		<div class="row">
+			<form role="form" onSubmit="return submitInitIdentityForm()">
+				<div class="form-group col-md-3">
+					<label for="owner-username-input">Username</label>
+					<input class="form-control" id="owner-username-input" type="text" placeholder="Enter Owner Username">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-company-input">Owner Company</label>
+					<input class="form-control" id="owner-company-input" type="text" placeholder="Enter Owner Company">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-key-1">Attribute Key #1</label>
+					<input class="form-control" type="text" id="owner-attr-key-1" placeholder="Enter Attribute Key #1">
+				</div>
+					<div class="form-group col-md-3">
+					<label for="owner-attr-value-1">Attribute Value #1</label>
+				<input class="form-control" type="text" id="owner-attr-value-1" placeholder="Enter Attribute Value #1">
+					</div>
+					<div class="form-group col-md-3">
+				<label for="owner-attr-key-2">Attribute Key #2</label>
+					<input class="form-control" type="text" id="owner-attr-key-2" placeholder="Enter Attribute Key #2">
+					</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-value-2">Attribute Value #2</label>
+					<input class="form-control" type="text" id="owner-attr-value-2" placeholder="Enter Attribute Value #2">
+				</div>
+					<div class="form-group col-md-3">
+					<label for="owner-attr-key-3">Attribute Key #3</label>
+					<input class="form-control" type="text" id="owner-attr-key-3" placeholder="Enter Attribute Key #3">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-value-3">Attribute Value #3</label>
+					<input class="form-control" type="text" id="owner-attr-value-3" placeholder="Enter Attribute Value #3">
+				</div>
+				<div class="form-group col-md-3">
+					<button type="submit" class="btn btn-info" href="#">Send Request</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<hr>
 	<div class="row">
 		<h4>User Identity</h4>
 	</div>
@@ -144,7 +189,7 @@
 </div>
 
 <script src="angularApp.js"></script>
-<script src="js/firebaseFunction.js"></script>
+<script src="js/user.js"></script>
 <script>
 	function showUpdateForm() {
 		document.getElementById("update-button").style.display = "none";
