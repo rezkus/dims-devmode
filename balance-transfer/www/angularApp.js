@@ -43,7 +43,7 @@ app.controller('appController', function($scope, appFactory){
     var owner_company = $scope.xxx;
 
     appFactory.init_owner(owner_id, owner_username, owner_company, token, function(data){
-
+      alert(data);
     });
   }
 
@@ -184,7 +184,7 @@ app.factory('appFactory', function($http){
         })
       }).success(function (response) {
         console.log(response);
-        callback(response.token);
+        callback(response);
       });
     }
 
