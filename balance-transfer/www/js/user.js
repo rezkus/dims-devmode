@@ -3,7 +3,7 @@ var db = firebase.database();
 var userTerkait = "hehe";
 
 readRequestFromInquisitor();
-
+readOwnerData();
 ////====================================================================================  IDENTITY OWNER SIDE
 function requestAttributeUpdateToIssuer() {
 	var newValue = document.getElementById("new-value").value;
@@ -85,4 +85,25 @@ function submitInitIdentityForm() {
 				alert("Form submission request has been sent!");
 			}
 	});
+}
+
+function readOwnerData() {
+	var username = sessionStorage.getItem("username");
+	// var org = sessionStorage.getItem("org");
+
+	var container = document.getElementById("display_user_owner_id");
+	var ref = db.ref("owner-data");
+
+	ref.on("value", function(data){
+		container.innerHTML = "";
+		var objKey = Object.keys(data.val());
+		for (var obj in objKey) {
+			var key = objKey[obj];
+			if (data.val()[key].ca_username === username) {
+				container.innerHTML += "<h5><b>Owner ID: </b>" + data.val()[key].owner_id + "</h5>";
+				sessionStorage.setItem("owner_id", data.val()[key].owner_id);
+			}
+		}
+	});
+
 }

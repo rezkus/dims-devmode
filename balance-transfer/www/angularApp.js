@@ -18,7 +18,9 @@ app.controller('appController', function($scope, appFactory){
     var org = $scope.org;
 
     appFactory.enrollUser(username, org, function(data){
-        sessionStorage.setItem("org1_token", data);
+        sessionStorage.setItem("token", data);
+        sessionStorage.setItem("username", username);
+        //sessionStorage.setItem("org", org);
         $scope.token = data;
     });
   }
@@ -27,7 +29,7 @@ app.controller('appController', function($scope, appFactory){
     console.log("acceptRequestFromInquisitor() is running");
     var identity_id = $scope.identity_id;
     var attribute_key = $scope.attribute_key;
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
 
     appFactory.acceptRequestFromInquisitor(identity_id, attribute_key, token, function(data){
       alert("acceptRequestFromInquisitor() success");
@@ -37,7 +39,7 @@ app.controller('appController', function($scope, appFactory){
   //---------init owner
   $scope.init_owner = function(owner_id, owner_username, owner_company, identity_id, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3) {
     console.log("init_owner() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     console.log(token);
     // var owner_id = $scope.icr_owner_id;
     // var owner_username = $scope.icr_owner_name;
@@ -54,7 +56,7 @@ app.controller('appController', function($scope, appFactory){
   //---------init identity
   $scope.init_identity = function(identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3) {
     console.log("init_identity() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     // var identity_id = $scope.icr_identity_id;
     // var owner_id = $scope.icr_owner_id;
     // var auth_company = $scope.icr_owner_company;
@@ -73,7 +75,7 @@ app.controller('appController', function($scope, appFactory){
   //---------read_everything
   $scope.read_everything = function() {
     console.log("read_everything() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
 
     appFactory.read_everything(token, function(data){
 
@@ -83,7 +85,7 @@ app.controller('appController', function($scope, appFactory){
   //---------read_attribute
   $scope.read_attribute = function() {
     console.log("read_attribute() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     var identity_id = $scope.xxx;
     var target_attr = $scope.xxx;
 
@@ -95,7 +97,7 @@ app.controller('appController', function($scope, appFactory){
   //---------update_attribute
   $scope.update_attribute = function() {
     console.log("update_attribute() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     var owner_id = $scope.xxx;
     var owner_username = $scope.xxx;
     var owner_company = $scope.xxx;
@@ -108,7 +110,7 @@ app.controller('appController', function($scope, appFactory){
   //---------sign attribute
   $scope.sign_attribute = function() {
     console.log("sign_attribute() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     var identity_id = $scope.xxx;
     var target_attr = $scope.xxx;
     var signer_name = $scope.xxx;
@@ -122,7 +124,7 @@ app.controller('appController', function($scope, appFactory){
   //---------set owner
   $scope.set_owner = function() {
     console.log("set_owner() is running");
-    var token = sessionStorage.getItem("org1_token");
+    var token = sessionStorage.getItem("token");
     var identity_id = $scope.xxx;
     var new_owner_id = $scope.xxx;
     var auth_company = $scope.xxx;
@@ -135,11 +137,28 @@ app.controller('appController', function($scope, appFactory){
   //---------read identity by owner id
   $scope.read_identity_by_owner_id = function() {
     console.log("read_identity_by_owner_id() is running");
-    var token = sessionStorage.getItem("org1_token");
-    var owner_id = $scope.xxx;
+    var token = sessionStorage.getItem("token");
+    var owner_id = sessionStorage.getItem("owner_id");
 
-    appFactory.read_identity_by_owner_id(owner_id, token, function(data){
+    appFactory.read_identity_by_owner_id(owner_id, token, function(txid){
 
+      // result: status:200
+      // payload:{
+      //   "docType\":\"identity\",
+      //   \"id\":\"i123\",
+      // // \"owner\":{\"id\":\"o123\",\"username\":\"\",\"company\":\"ITB\"},
+      // // \"IDAttribute\":[
+      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isStudent\",\"IDValue\":\"true\",\"IDSignature\":\"noSig\"},
+      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isAgeOver18\",\"IDValue\":\"false\",\"IDSignature\":\"noSig\"},
+      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isGPAOver3\",\"IDValue\":\"true\",\"IDSignature\":\"noSig\"}]}"
+
+
+      appFactory.query_by_txid(txid, token, function(data) {
+        $scope.owner_identity_id = data.id;
+        var payload = data.IDAttribute;
+        //console.log(payload[2].IDKey);
+  			$scope.owner_attribute = payload;
+      });
     });
   }
 
@@ -175,16 +194,16 @@ app.factory('appFactory', function($http){
     // ================== init_owner
     factory.init_owner = function(owner_id, owner_username, owner_company, token, callback){
       $http({
-        method: "POST",
-        url: "/channels/mychannel/chaincodes/mycc",
+        method: 'POST',
+        url: '/channels/mychannel/chaincodes/mycc',
         headers: {
-          "authorization": "Bearer " + token,
-          "Content-Type": "application/json"
+          'authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
         },
         data: {
-          "peers": ["peer0.org1.example.com","peer1.org1.example.com"],
-          "fcn": "init_owner",
-          "args": [owner_id, owner_username, owner_company]
+          'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
+          'fcn': 'init_owner',
+          'args': [owner_id, owner_username, owner_company]
         }
       }).success(function (response) {
         console.log(response);
@@ -198,13 +217,13 @@ app.factory('appFactory', function($http){
         method: 'POST',
         url: '/channels/mychannel/chaincodes/mycc',
         headers: {
-          'authorization': "Bearer " + token,
+          'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
         data: {
-          "peers": ["peer0.org1.example.com","peer1.org1.example.com"],
-          "fcn":"init_identity",
-          "args":[identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3]
+          'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
+          'fcn':'init_identity',
+          'args':[identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3]
         }
       }).success(function (response) {
         console.log(response);
@@ -321,11 +340,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'read_identity_by_owner_id',
           'args':[owner_id]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -335,6 +354,47 @@ app.factory('appFactory', function($http){
     //----------------------------------------------------------------------------------------
     //-----------------------------END OF INVOKE CHAINCODE------------------------------------
     //----------------------------------------------------------------------------------------
+
+
+    //----------------------------------------------------------------------------------------
+    //-----------------------------QUERY FUNCTIONS------------------------------------
+    //----------------------------------------------------------------------------------------
+    // # echo "GET query Transaction by TransactionID"
+    // # echo
+    // # curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer0.org1.example.com \
+    // #   -H "authorization: Bearer $ORG1_TOKEN" \
+    // #   -H "content-type: application/json"
+    // # echo
+    // # echo
+
+    // ================== GET QUERY TRANSACTION BY TRANSACTION ID
+    factory.query_by_txid = function(tx_id, token, callback){
+      $http({
+        method: 'GET',
+        url: '/channels/mychannel/transactions/' + tx_id,
+        headers: {
+          'authorization': 'Bearer ' + token,
+          'Content-Type': 'application/json'
+        },
+        params: {peer: 'peer0.org1.example.com'}    //SHOULD BE VAR DEPENDING OF THE SIGNING CA USER
+      }).success(function (response) {
+        var responsePayload = response.transactionEnvelope.payload.data.actions[0].payload.action.proposal_response_payload.extension.response.payload;
+
+        var responsePayloadObj = JSON.parse(responsePayload);
+        console.log(responsePayloadObj);
+
+        callback(responsePayloadObj);
+      });
+    }
+
+
+
+
+    //----------------------------------------------------------------------------------------
+    //-----------------------------END OF QUERY FUNCTIONS------------------------------------
+    //----------------------------------------------------------------------------------------
+
+
 
     // // ================== acceptRequestFromInquisitor
     // factory.acceptRequestFromInquisitor = function(identity_id, attribute_key, token, callback){

@@ -133,30 +133,44 @@
 	</div>
 	<hr>
 	<div class="row">
-		<h4>User Identity</h4>
+    <div class="col-md-4">
+      <h4>User Identity</h4>
+    </div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-sm btn-info" id="refresh_identity" name="button" ng-click="read_identity_by_owner_id()">Refresh</button>
+    </div>
 	</div>
 	<div class="row">
-		<table id="identity-table" class="table table-hover table-bordered">
+    <div class="col-md-3" id="display_user_identity_id" >
+
+        <h5><b>Identity ID: </b>{{owner_identity_id}}</h5>
+    </div>
+    <div class="col-md-3" id="display_user_owner_id" >
+
+    </div>
+		<table id="owner_attribute" class="table table-hover table-bordered">
 			<thead>
 				<tr>
-				<th class="col-md-1">No.</th>
-				<th class="col-md-4">Identity Key</th>
-				<th class="col-md-4">Value</th>
+				<!-- <th class="col-md-1">No. </th> -->
+				<th class="col-md-2">Attribute Key</th>
+				<th class="col-md-2">Attribute Value</th>
+        <th class="col-md-4">Attribute Signature</th>
 				<th class="col-md-3">Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>1.</td>
-					<td>ID</td>
-					<td>rezha123</td>
+				<tr ng-repeat="attribute in owner_attribute">
+					<!-- <td>{{attribute.Key}}</td> -->
+					<td>{{attribute.IDKey}}</td>
+					<td>{{attribute.IDValue}}</td>
+          <td>{{attribute.IDSignature}}</td>
 					<td>
-						<form role="form" id="update-form" style="display:none" onSubmit="return requestAttributeUpdateToIssuer()">
-							<input type="text" class="form-inline" id="new-value" placeholder="Enter new value">
+						<form role="form" class="attribute_update_form" style="display:none" onSubmit="return requestAttributeUpdateToIssuer()">
+							<input type="text" class="form-inline" placeholder="Enter new value">
 							<button type="submit" class="btn btn-sm btn-info">Update</button>
 						</form>
-						<button type="button" id="update-button" class="btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
-						<button type="button" id="sign-button" class="btn btn-sm btn-default" onClick="return requestAttributeSignToIssuer()">Request Sign</button>
+						<button type="button" class="attribute_update_button btn btn-sm btn-default" onClick="return showUpdateForm()">Update Value</button>
+						<button type="button" class="attribute_sign_button btn btn-sm btn-default" onClick="return requestAttributeSignToIssuer()">Request Sign</button>
 					</td>
 				</tr>
 			</tbody>

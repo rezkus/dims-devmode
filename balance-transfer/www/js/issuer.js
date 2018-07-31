@@ -25,25 +25,35 @@ readInitIdentityForm();
 // });
 
 $(document).on('click','.icr-button-accept',function(){
-console.log("test");
-var $row = $(this).closest("tr");    // Find the row
-var $owner_id = $row.find(".icr_owner_id").find("input").val();
-var $owner_username = $row.find(".icr_owner_name").text();
-var $owner_company = $row.find(".icr_owner_company").text();
-var $identity_id = $row.find(".icr_identity_id").find("input").val();
-var $attr_key1 = $row.find(".icr_attr_key_1").text();
-var $attr_val1 = $row.find(".icr_attr_value_1").text();
-var $attr_key2 = $row.find(".icr_attr_key_2").text();
-var $attr_val2 = $row.find(".icr_attr_value_2").text();
-var $attr_key3 = $row.find(".icr_attr_key_3").text();
-var $attr_val3 = $row.find(".icr_attr_value_3").text();
+	//console.log("test");
+	var $row = $(this).closest("tr");    // Find the row
+	var $owner_id = $row.find(".icr_owner_id").find("input").val();
+	var $owner_username = $row.find(".icr_owner_name").text();
+	var $owner_company = $row.find(".icr_owner_company").text();
+	var $identity_id = $row.find(".icr_identity_id").find("input").val();
+	var $attr_key1 = $row.find(".icr_attr_key_1").text();
+	var $attr_val1 = $row.find(".icr_attr_value_1").text();
+	var $attr_key2 = $row.find(".icr_attr_key_2").text();
+	var $attr_val2 = $row.find(".icr_attr_value_2").text();
+	var $attr_key3 = $row.find(".icr_attr_key_3").text();
+	var $attr_val3 = $row.find(".icr_attr_value_3").text();
 
-console.log($owner_id + " " + $owner_username + " " + $owner_company + " " + $identity_id + " " + $attr_key1 + " " + $attr_val1 + " " + $attr_key2 + " " + $attr_val2 + " " + $attr_key3 + " " + $attr_val3)
-angular.element('#appController').scope().init_owner($owner_id, $owner_username, $owner_company, $identity_id, $attr_key1, $attr_val1, $attr_key2, $attr_val2, $attr_key3, $attr_val3);
-// angular.element('#appController').scope().init_identity($identity_id, $owner_id, $owner_company, $attr_key1, $attr_val1, $attr_key2, $attr_val2, $attr_key3, $attr_val3);
+	var token = sessionStorage.getItem("token");
+	var decoded = parseJwt(token);
 
-// Let's test it out
-alert("Accept init identity success");
+	console.log(decoded);
+
+
+
+	// console.log($owner_id + " " + $owner_username + " " + $owner_company + " " + $identity_id + " " + $attr_key1 + " " + $attr_val1 + " " + $attr_key2 + " " + $attr_val2 + " " + $attr_key3 + " " + $attr_val3)
+	$.when(angular.element('#appController')
+		.scope()
+		.init_owner($owner_id, $owner_username, $owner_company, $identity_id, $attr_key1, $attr_val1, $attr_key2, $attr_val2, $attr_key3, $attr_val3),
+		pushOwnerDataToFirebase($owner_id, decoded.username, decoded.orgName));
+	// angular.element('#appController').scope().init_identity($identity_id, $owner_id, $owner_company, $attr_key1, $attr_val1, $attr_key2, $attr_val2, $attr_key3, $attr_val3);
+
+	// Let's test it out
+	//alert("Accept init identity success");
 });
 
 function readInitIdentityForm() {
@@ -62,3 +72,17 @@ function readInitIdentityForm() {
 		}
 	});
 }
+
+var pushOwnerDataToFirebase = function(owner_id, CA_username, CA_org) {
+	var ref = db.ref("owner-data").push({
+		owner_id: owner_id,
+		ca_username: CA_username,
+		ca_org: CA_org
+	});
+}
+
+function parseJwt (token) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace('-', '+').replace('_', '/');
+            return JSON.parse(window.atob(base64));
+        };
