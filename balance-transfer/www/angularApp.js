@@ -108,13 +108,13 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------sign attribute
-  $scope.sign_attribute = function() {
+  $scope.sign_attribute = function(identity_id, target_attr, signer_name, signer_company) {
     console.log("sign_attribute() is running");
     var token = sessionStorage.getItem("token");
-    var identity_id = $scope.xxx;
-    var target_attr = $scope.xxx;
-    var signer_name = $scope.xxx;
-    var signer_company = $scope.xxx;
+    // var identity_id = $scope.xxx;
+    // var target_attr = $scope.xxx;
+    // var signer_name = $scope.xxx;
+    // var signer_company = $scope.xxx;
 
     appFactory.sign_attribute(identity_id, target_attr, signer_name, signer_company, token, function(data){
 
@@ -141,21 +141,14 @@ app.controller('appController', function($scope, appFactory){
     var owner_id = sessionStorage.getItem("owner_id");
 
     appFactory.read_identity_by_owner_id(owner_id, token, function(txid){
-
-      // result: status:200
-      // payload:{
-      //   "docType\":\"identity\",
-      //   \"id\":\"i123\",
-      // // \"owner\":{\"id\":\"o123\",\"username\":\"\",\"company\":\"ITB\"},
-      // // \"IDAttribute\":[
-      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isStudent\",\"IDValue\":\"true\",\"IDSignature\":\"noSig\"},
-      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isAgeOver18\",\"IDValue\":\"false\",\"IDSignature\":\"noSig\"},
-      //     // {\"docType\":\"identity_attribute\",\"IDKey\":\"isGPAOver3\",\"IDValue\":\"true\",\"IDSignature\":\"noSig\"}]}"
-
-
       appFactory.query_by_txid(txid, token, function(data) {
         $scope.owner_identity_id = data.id;
+
         var payload = data.IDAttribute;
+        for (var i = 0; i < payload.length; i++) {
+          var id = i+1;
+          payload[i].index = id.toString();
+        }
         //console.log(payload[2].IDKey);
   			$scope.owner_attribute = payload;
       });
@@ -163,6 +156,9 @@ app.controller('appController', function($scope, appFactory){
   }
 
 });
+
+
+//=============Factory=======================
 
 app.factory('appFactory', function($http){
 
@@ -240,11 +236,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'read_everything',
           'args':[]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -260,11 +256,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'read_attribute',
           'args':[identity_id, target_attr]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -280,11 +276,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'update_attribute',
           'args':[identity_id, target_attr, new_value, isIssuer]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -300,11 +296,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'sign_attribute',
           'args':[identity_id, target_attr, signer_name, signer_company]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -320,11 +316,11 @@ app.factory('appFactory', function($http){
           'authorization': 'Bearer ' + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
+        data: {
           'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
           'fcn':'set_owner',
           'args':[identity_id, new_owner_id, auth_company]
-        })
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);

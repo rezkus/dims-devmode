@@ -4,6 +4,7 @@ var userTerkait = "hehe";
 
 readRequestFromInquisitor();
 readOwnerData();
+
 ////====================================================================================  IDENTITY OWNER SIDE
 function requestAttributeUpdateToIssuer() {
 	var newValue = document.getElementById("new-value").value;
@@ -105,5 +106,18 @@ function readOwnerData() {
 			}
 		}
 	});
-
 }
+
+$(document).on('click','.attribute_sign_button',function(){
+	var $row = $(this).closest("tr");    // Find the row
+  var $attribute_key = $row.find(".attribute_key").text(); // Find the text
+	var $owner_identity_id = document.getElementById('owner_identity_id').innerText;
+
+	var $signer_name = "Pak Edi";
+	var $signer_company = "STEI ITB";
+
+	console.log($attribute_key + " --- " + $owner_identity_id);
+	angular.element('#appController')
+		.scope()
+		.sign_attribute($owner_identity_id, $attribute_key, $signer_name, $signer_company);
+});
