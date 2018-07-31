@@ -35,15 +35,19 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------init owner
-  $scope.init_owner = function(owner_id, owner_username, owner_company) {
+  $scope.init_owner = function(owner_id, owner_username, owner_company, identity_id, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3) {
     console.log("init_owner() is running");
     var token = sessionStorage.getItem("org1_token");
+    console.log(token);
     // var owner_id = $scope.icr_owner_id;
     // var owner_username = $scope.icr_owner_name;
     // var owner_company = $scope.icr_owner_company;
 
     appFactory.init_owner(owner_id, owner_username, owner_company, token, function(data){
       alert("init owner success");
+      appFactory.init_identity(identity_id, owner_id, owner_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3, token, function(data){
+        alert("init identity success");
+      });
     });
   }
 
@@ -171,17 +175,17 @@ app.factory('appFactory', function($http){
     // ================== init_owner
     factory.init_owner = function(owner_id, owner_username, owner_company, token, callback){
       $http({
-        method: 'POST',
-        url: '/channels/mychannel/chaincodes/mycc',
+        method: "POST",
+        url: "/channels/mychannel/chaincodes/mycc",
         headers: {
-          'authorization': 'Bearer ' + token,
-          'Content-Type': 'application/json'
+          "authorization": "Bearer " + token,
+          "Content-Type": "application/json"
         },
-        data: $.param({
-          'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
-          'fcn':'init_owner',
-          'args':[owner_id, owner_username, owner_company]
-        })
+        data: {
+          "peers": ["peer0.org1.example.com","peer1.org1.example.com"],
+          "fcn": "init_owner",
+          "args": [owner_id, owner_username, owner_company]
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
@@ -194,14 +198,14 @@ app.factory('appFactory', function($http){
         method: 'POST',
         url: '/channels/mychannel/chaincodes/mycc',
         headers: {
-          'authorization': 'Bearer ' + token,
+          'authorization': "Bearer " + token,
           'Content-Type': 'application/json'
         },
-        data: $.param({
-          'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
-          'fcn':'init_identity',
-          'args':[identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3]
-        })
+        data: {
+          "peers": ["peer0.org1.example.com","peer1.org1.example.com"],
+          "fcn":"init_identity",
+          "args":[identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3]
+        }
       }).success(function (response) {
         console.log(response);
         callback(response);
