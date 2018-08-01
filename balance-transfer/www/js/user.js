@@ -5,41 +5,71 @@ var userTerkait = "hehe";
 readRequestFromInquisitor();
 readOwnerData();
 
-////====================================================================================  IDENTITY OWNER SIDE
-function requestAttributeUpdateToIssuer() {
-	var newValue = document.getElementById("new-value").value;
+////====================================================================================  IDENTITY USER SIDE
+
+$(document).on('click', '.new_attr_submit', function(){
+// function requestAttributeUpdateToIssuer() {
+	console.log('submit');
+	var $row = $(this).closest("tr");    // Find the row
+
+	var $attribute_key = $row.find(".attribute_key").text(); // Find the text
+	var $owner_identity_id = document.getElementById('owner_identity_id').innerText;
+
+	var $actions = $row.find(".attribute_action_button");
+	var $action_form = $actions.find("form");
+
+	//console.log($action_form.find(".new_attr_value"));
+	var newValue = $action_form.find(".new_attr_value").val();
+
+	// var $action_form = $(this).closest("form");
+	// var newValue = $action_form.find(".new_attr_value").value;
+	console.log(newValue);
 
 	var result = db.ref("attribute-change-request").push({
 		type: "update",
-		identityID: "i123",
-		attrName: "isAgeOver18",
+		identityID: $owner_identity_id,
+		attrName: $attribute_key,
 		value: newValue
 	}, function(error) {
 		if (error) {
 			alert("Error has occured during request. Please try again.");
 		} else {
-			alert("Update request has been sent!");
-			document.getElementById("new-value").value = "";
-			document.getElementById("update-form").style.display = "none";
-			document.getElementById("update-button").style.display = "inline";
+			console.log("Update request has been sent!");
+			//document.getElementById("new_attr").value = "";
+			// document.getElementById("update-form").style.display = "none";
+			// document.getElementById("update-button").style.display = "inline";
+
+			$action_form.find(".new_attr_value").text = "";
+			var $update_button = $actions.find(".attribute_update_button").css("display", "inline");
+			var $update_form = $actions.find(".attribute_update_form").css("display", "none");
+
 		}
 	});
-}
+});
+// }
 
-function requestAttributeSignToIssuer() {
+$(document).on('click','.attribute_sign_button',function(){
+	var $row = $(this).closest("tr");    // Find the row
+	var $attribute_key = $row.find(".attribute_key").text(); // Find the text
+	var $owner_identity_id = document.getElementById('owner_identity_id').innerText;
+
 	var result = db.ref("attribute-change-request").push({
 		type: "sign",
-		identityID: "i123",
-		attrName: "isAgeOver18",
-		value: false
+		identityID: $owner_identity_id,
+		attrName: $attribute_key,
+		value: "<SIG>"
 	}, function(error) {
 		if (error) {
 			alert("Error has occured during request. Please try again.");
 		} else {
 			alert("Sign request has been sent!");
+			console.log("successfully pushed sign request to firebase");
 		}
 	});
-}
+});
+
+
+//---------
 
 function readRequestFromInquisitor() {
 	var table = document.getElementById("owner-id-request-table").tBodies[0];
@@ -108,16 +138,17 @@ function readOwnerData() {
 	});
 }
 
-$(document).on('click','.attribute_sign_button',function(){
+$(document).on('click','.attribute_update_button',function(){
 	var $row = $(this).closest("tr");    // Find the row
-  var $attribute_key = $row.find(".attribute_key").text(); // Find the text
-	var $owner_identity_id = document.getElementById('owner_identity_id').innerText;
+	var $actions = $row.find(".attribute_action_button");
 
-	var $signer_name = "Pak Edi";
-	var $signer_company = "STEI ITB";
+	var $update_button = $actions.find(".attribute_update_button").css("display", "none");
+	var $update_form = $actions.find(".attribute_update_form").css("display", "inline");
 
-	console.log($attribute_key + " --- " + $owner_identity_id);
-	angular.element('#appController')
-		.scope()
-		.sign_attribute($owner_identity_id, $attribute_key, $signer_name, $signer_company);
+	// console.log($update_form);
+	//
+	// $update_button.style.display = "none";
+	// $update_form.style.display = "inline";
+	// document.getElementById("attribute_update_button").style.display = "none";
+	// document.getElementById("attribute_update_form").style.display = "inline";
 });

@@ -95,12 +95,13 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------update_attribute
-  $scope.update_attribute = function() {
+  $scope.update_attribute = function(identity_id, target_attr, new_value) {
     console.log("update_attribute() is running");
     var token = sessionStorage.getItem("token");
-    var owner_id = $scope.xxx;
-    var owner_username = $scope.xxx;
-    var owner_company = $scope.xxx;
+    var isIssuer = 'true';
+    // var owner_id = $scope.xxx;
+    // var owner_username = $scope.xxx;
+    // var owner_company = $scope.xxx;
 
     appFactory.update_attribute(identity_id, target_attr, new_value, isIssuer, token, function(data){
 

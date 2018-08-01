@@ -1,6 +1,7 @@
 var db = firebase.database();
 
 readInitIdentityForm();
+readChangeRequest();
 
 // $(".icr-button-accept").click(function() {
 // 	console.log("test");
@@ -86,3 +87,48 @@ function parseJwt (token) {
             var base64 = base64Url.replace('-', '+').replace('_', '/');
             return JSON.parse(window.atob(base64));
         };
+
+
+function readChangeRequest() {
+	var table = document.getElementById("identity_change_request_table").tBodies[0];
+	var ref = db.ref("attribute-change-request");
+
+	ref.on("value", function(data){
+		table.innerHTML = "";
+		var objKey = Object.keys(data.val());
+		var i = 1;
+		for (var obj in objKey) {
+			var key = objKey[obj];
+			var object = data.val()[key];
+
+			table.innerHTML += '<tr><td class="attribute_index">' + i + '</td><td class="owner_identity_id">' + object.identityID + '</td><td class="attribute_key">' + object.attrName + '</td><td class="attribute_request_type">' + object.type + '</td><td class="attribute_new_value">' + object.value + '</td><td><button type="button" class="accept_change_request btn btn-sm btn-success">Accept</button><button type="button" class="decline_change_request btn btn-sm btn-danger">Decline</button></td></tr>'
+			i++
+		}
+	});
+}
+
+$(document).on('click','.accept_change_request',function(){
+	var $row = $(this).closest("tr");    // Find the row
+  var $attribute_key = $row.find(".attribute_key").text(); // Find the text
+	var $owner_identity_id = $row.find('.owner_identity_id').text();
+	var $attribute_new_value = $row.find('.attribute_new_value').text();
+	var $attribute_request_type = $row.find('.attribute_request_type').text();
+
+	var $signer_name = "Pak Edi";
+	var $signer_company = "STEI ITB";
+
+	//console.log($attribute_key + " --- " + $owner_identity_id);
+
+	if ($attribute_request_type == 'sign') {
+		console.log("updating attribute with new val");
+		angular.element('#appController')
+			.scope()
+			.sign_attribute($owner_identity_id, $attribute_key, $signer_name, $signer_company);
+	} else if ($attribute_request_type == 'update') {
+			console.log("updating attribute with new val");
+			angular.element('#appController')
+				.scope()
+				.update_attribute($owner_identity_id, $attribute_key, $attribute_request_type);
+
+	}
+});
