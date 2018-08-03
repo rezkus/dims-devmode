@@ -30,10 +30,15 @@ function requestAttributeToOwner() {
 		if (error) {
 			alert("Error has occured during request. Please try again.");
 		} else {
-			alert("Request has been sent!");
+      $("#username")[0].reset();
+      $("#attribute")[0].reset();
+      $("#details")[0].reset();
+
+      alert("Request has been sent!");
+
+
 		}
 	});
-}
 
 function readSentRequest() {
 	var table = document.getElementById("identity-request-table").tBodies[0];

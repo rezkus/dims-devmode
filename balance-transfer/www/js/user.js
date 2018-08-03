@@ -87,7 +87,7 @@ function readRequestFromInquisitor() {
 		var i = 1;
 		for (var obj in objKey) {
 			var key = objKey[obj];
-			if (data.val()[key].requestTo === decoded.username) {
+			if (data.val()[key].requestTo === decoded.username && data.val()[key].status === "Processing" ) {
 				table.innerHTML += "<tr><td>" + i + ".</td><td class='inquisitor_request_dateTime'>" + data.val()[key].dateTime + "</td><td class='inquisitor_request_targetAttr'>" + data.val()[key].attrName + "</td><td>" + data.val()[key].requestFrom + "</td><td>" + data.val()[key].details+ "</td><td><button type='button' class='accept-inquisitor-request btn btn-sm btn-success'>Accept</button><button type='button' class='decline-inquisitor-request btn btn-sm btn-danger'>Decline</button></td></tr>";
 				i++;
 			}
@@ -117,11 +117,35 @@ $(document).on("click", ".accept-inquisitor-request", function() {
 				data.ref.update({result: $result});
 				data.ref.update({status: "Accepted"});
 
-			console.log("read_attribute() done");	
+				console.log("read_attribute() done");
 			});
-
 	});
 });
+
+$(document).on("click", ".decline-inquisitor-request", function() {
+	var ref = db.ref("attribute-request");
+	var $row = $(this).closest("tr");    // Find the row
+	var $dateTime = $row.find(".inquisitor_request_dateTime").text(); // Find the text
+	ref.orderByChild("dateTime").equalTo($dateTime).once("child_added", function(data) {
+		//console.log(data);
+		data.ref.update({status: "DECLINED"});
+	});
+
+	alert("Identity request has been declined");
+
+}
+
+//============DELETING DATA FROM FIREBASE
+// var xxx = db.ref("xxx");
+// var checkDate = xxx.orderByChild("dateTime").equalTo($dateTime);
+// checkDate.once("value").then(function(snapshot) {
+// 	var updates = {};
+// 	snapshot.forEach(function(child){
+// 		updates["/xxx/"+child.key] = null;
+// 	});
+// 	xxx.update(updates);
+// });
+
 
 function submitInitIdentityForm() {
 	var username = document.getElementById("owner-username-input").value;
@@ -132,8 +156,11 @@ function submitInitIdentityForm() {
 	var attr_val2 = document.getElementById("owner-attr-value-2").value;
 	var attr_key3 = document.getElementById("owner-attr-key-3").value;
 	var attr_val3 = document.getElementById("owner-attr-value-3").value;
+	var dateTime = currentdate.toLocaleString();
+
 
 	var result = db.ref("init-identity-form").push( {
+		dateTime: dateTime,
 		owner_username: username,
 		owner_company: company,
 		attr_key1: attr_key1,
@@ -141,12 +168,22 @@ function submitInitIdentityForm() {
 		attr_key2: attr_key2,
 		attr_val2: attr_val2,
 		attr_key3: attr_key3,
-		attr_val3: attr_val3
+		attr_val3: attr_val3,
+		status: "Processing"
 	}, function(error) {
 			if (error) {
 				alert("Error has occured during request. Please try again.");
 			} else {
+				$("#owner-username-input")[0].reset();
+				$("#owner-company-input")[0].reset();
+				$("#owner-attr-key-1")[0].reset();
+				$("#owner-attr-value-1")[0].reset();
+				$("#owner-attr-key-2")[0].reset();
+				$("#owner-attr-value-2")[0].reset();
+				$("#owner-attr-key-3")[0].reset();
+				$("#owner-attr-value-3")[0].reset();
 				alert("Form submission request has been sent!");
+
 			}
 	});
 }
@@ -177,13 +214,6 @@ $(document).on('click','.attribute_update_button',function(){
 
 	var $update_button = $actions.find(".attribute_update_button").css("display", "none");
 	var $update_form = $actions.find(".attribute_update_form").css("display", "inline");
-
-	// console.log($update_form);
-	//
-	// $update_button.style.display = "none";
-	// $update_form.style.display = "inline";
-	// document.getElementById("attribute_update_button").style.display = "none";
-	// document.getElementById("attribute_update_form").style.display = "inline";
 });
 
 
