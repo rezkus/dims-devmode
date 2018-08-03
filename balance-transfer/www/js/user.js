@@ -88,13 +88,40 @@ function readRequestFromInquisitor() {
 		for (var obj in objKey) {
 			var key = objKey[obj];
 			if (data.val()[key].requestTo === decoded.username) {
-				table.innerHTML += "<tr><td>" + i + ".</td><td>" + data.val()[key].attrName + "</td><td>" +
-					data.val()[key].requestFrom + "</td><td>" + data.val()[key].details+ "</td><td><button type='button' class='btn btn-sm btn-success' ng-click='acceptRequestFromInquisitor()'>Accept</button><button type='button' class='btn btn-sm btn-danger' ng-click='declineRequestFromInquisitor()'>Decline</button></td></tr>";
+				table.innerHTML += "<tr><td>" + i + ".</td><td class='inquisitor_request_dateTime'>" + data.val()[key].dateTime + "</td><td class='inquisitor_request_targetAttr'>" + data.val()[key].attrName + "</td><td>" + data.val()[key].requestFrom + "</td><td>" + data.val()[key].details+ "</td><td><button type='button' class='accept-inquisitor-request btn btn-sm btn-success'>Accept</button><button type='button' class='decline-inquisitor-request btn btn-sm btn-danger'>Decline</button></td></tr>";
 				i++;
 			}
 		}
 	});
 }
+
+$(document).on("click", ".accept-inquisitor-request", function() {
+	var ref = db.ref("attribute-request");
+
+	var $row = $(this).closest("tr");    // Find the row
+	var $dateTime = $row.find(".inquisitor_request_dateTime").text(); // Find the text
+	var $target_attr = $row.find(".inquisitor_request_targetAttr").text(); // Find the text"
+	var $owner_identity_id = document.getElementById("owner_identity_id").innerHTML;
+
+	console.log($target_attr);
+	console.log($owner_identity_id);
+
+	var $result;
+	angular.element('#appController')
+		.scope()
+		.read_attribute($owner_identity_id, $target_attr, function(data) {
+			$result = data;
+			console.log($result);
+			ref.orderByChild("dateTime").equalTo($dateTime).once("child_added", function(data) {
+				//console.log(data);
+				data.ref.update({result: $result});
+				data.ref.update({status: "Accepted"});
+
+			console.log("read_attribute() done");	
+			});
+
+	});
+});
 
 function submitInitIdentityForm() {
 	var username = document.getElementById("owner-username-input").value;

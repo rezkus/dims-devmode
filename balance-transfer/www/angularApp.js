@@ -83,15 +83,19 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------read_attribute
-  $scope.read_attribute = function() {
+  $scope.read_attribute = function(identity_id, target_attr, callback) {
     console.log("read_attribute() is running");
     var token = sessionStorage.getItem("token");
-    var identity_id = $scope.xxx;
-    var target_attr = $scope.xxx;
 
-    appFactory.read_attribute(identity_id, target_attr, token, function(data){
-
+    appFactory.read_attribute(identity_id, target_attr, token, function(txid){
+      appFactory.query_by_txid(txid, token, function(payload){
+        //console.log(payload);
+        //$scope.read_attribute_result = payload;
+        callback(payload);
+      });
+      console.log("read_attribute() success");
     });
+    // return payload;
   }
 
   //---------update_attribute
@@ -384,35 +388,9 @@ app.factory('appFactory', function($http){
       });
     }
 
-
-
-
     //----------------------------------------------------------------------------------------
     //-----------------------------END OF QUERY FUNCTIONS------------------------------------
     //----------------------------------------------------------------------------------------
-
-
-
-    // // ================== acceptRequestFromInquisitor
-    // factory.acceptRequestFromInquisitor = function(identity_id, attribute_key, token, callback){
-    //   $http({
-    //     method: 'POST',
-    //     url: '/channels/mychannel/chaincode/mycc',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'authorization': 'Bearer ' + token
-    //     },
-    //     data: $.param({
-    //       'peers': ['peer0.org1.example.com','peer1.org1.example.com'],
-    //       'fcn':'read_attribute',
-    //       'args':[identity_id, attribute_key]
-    //     })
-    //   }).success(function (response){
-    //       console.log(response);
-    //       //kirim response ke inquisitor table
-    //       //status request inquisitor jadi success
-    //   });
-    // }
 
   return factory;
 });

@@ -10,13 +10,22 @@ function requestAttributeToOwner() {
 	var attr = document.getElementById("attribute").value;
 	var details = document.getElementById("details").value;
 
+  var currentdate = new Date();
+  var dateTime = currentdate.toLocaleString();
+
 	var result = db.ref("attribute-request").push({
+    dateTime: dateTime,
 		requestFrom: lembaga,
 		requestTo: username,
 		attrName: attr,
 		details: details,
 		status: "Processing",
-		result: ""
+		result: {
+      IDKey: "-",
+      IDValue: "-",
+      IDSignature: "-",
+      docType: "-"
+    }
 	}, function(error) {
 		if (error) {
 			alert("Error has occured during request. Please try again.");
@@ -38,8 +47,7 @@ function readSentRequest() {
 			var key = objKey[obj];
 			if (data.val()[key].requestFrom === lembaga) {
 				table.innerHTML += "<tr><td>" + i + ".</td><td>" + data.val()[key].requestTo + "</td><td>" +
-					data.val()[key].attrName + "</td><td>" + data.val()[key].status + "</td><td>" + data.val()[key].result +
-					"</td></tr>";
+					data.val()[key].attrName + "</td><td>" + data.val()[key].status + "</td><td>" + data.val()[key].result.IDValue + "<br>" + data.val()[key].result.IDSignature + "</td></tr>";
 				i++;
 			}
 		}
