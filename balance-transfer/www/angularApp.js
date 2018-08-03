@@ -104,7 +104,7 @@ app.controller('appController', function($scope, appFactory){
     // var owner_company = $scope.xxx;
 
     appFactory.update_attribute(identity_id, target_attr, new_value, isIssuer, token, function(data){
-
+      console.log("sign_attribute() success");
     });
   }
 
@@ -118,7 +118,7 @@ app.controller('appController', function($scope, appFactory){
     // var signer_company = $scope.xxx;
 
     appFactory.sign_attribute(identity_id, target_attr, signer_name, signer_company, token, function(data){
-
+      console.log("sign_attribute() success");
     });
   }
 

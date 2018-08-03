@@ -2,7 +2,8 @@ var db = firebase.database();
 
 readInitIdentityForm();
 readChangeRequest();
-
+var token = sessionStorage.getItem("token");
+var decoded = parseJwt(token);
 // $(".icr-button-accept").click(function() {
 // 	console.log("test");
 // 	var $row = $(this).closest("tr");    // Find the row
@@ -39,8 +40,7 @@ $(document).on('click','.icr-button-accept',function(){
 	var $attr_key3 = $row.find(".icr_attr_key_3").text();
 	var $attr_val3 = $row.find(".icr_attr_value_3").text();
 
-	var token = sessionStorage.getItem("token");
-	var decoded = parseJwt(token);
+
 
 	console.log(decoded);
 
@@ -128,7 +128,7 @@ $(document).on('click','.accept_change_request',function(){
 			console.log("updating attribute with new val");
 			angular.element('#appController')
 				.scope()
-				.update_attribute($owner_identity_id, $attribute_key, $attribute_request_type);
+				.update_attribute($owner_identity_id, $attribute_key, $attribute_new_value);
 
 	}
 });

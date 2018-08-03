@@ -1,6 +1,9 @@
 // JavaScript Document
 var db = firebase.database();
-var userTerkait = "hehe";
+//var userTerkait = "Jim";
+var token = sessionStorage.getItem("token");
+var decoded = parseJwt(token);
+
 
 readRequestFromInquisitor();
 readOwnerData();
@@ -57,7 +60,7 @@ $(document).on('click','.attribute_sign_button',function(){
 		type: "sign",
 		identityID: $owner_identity_id,
 		attrName: $attribute_key,
-		value: "<SIG>"
+		value: "-"
 	}, function(error) {
 		if (error) {
 			alert("Error has occured during request. Please try again.");
@@ -72,6 +75,9 @@ $(document).on('click','.attribute_sign_button',function(){
 //---------
 
 function readRequestFromInquisitor() {
+
+	console.log("readRequestFromInquisitor() is running")
+
 	var table = document.getElementById("owner-id-request-table").tBodies[0];
 	var ref = db.ref("attribute-request");
 
@@ -81,9 +87,9 @@ function readRequestFromInquisitor() {
 		var i = 1;
 		for (var obj in objKey) {
 			var key = objKey[obj];
-			if (data.val()[key].requestTo === userTerkait) {
-				table.innerHTML += "<tr><td>" + i + ".</td><td ng-model='attribute_key'>" + data.val()[key].attrName + "</td><td>" +
-					data.val()[key].requestFrom + "</td><td><button type='button' class='btn btn-sm btn-success' ng-click='acceptRequestFromInquisitor()'>Accept</button><button type='button' class='btn btn-sm btn-danger' ng-click='declineRequestFromInquisitor()'>Decline</button></td></tr>";
+			if (data.val()[key].requestTo === decoded.username) {
+				table.innerHTML += "<tr><td>" + i + ".</td><td>" + data.val()[key].attrName + "</td><td>" +
+					data.val()[key].requestFrom + "</td><td>" + data.val()[key].details+ "</td><td><button type='button' class='btn btn-sm btn-success' ng-click='acceptRequestFromInquisitor()'>Accept</button><button type='button' class='btn btn-sm btn-danger' ng-click='declineRequestFromInquisitor()'>Decline</button></td></tr>";
 				i++;
 			}
 		}
@@ -152,3 +158,10 @@ $(document).on('click','.attribute_update_button',function(){
 	// document.getElementById("attribute_update_button").style.display = "none";
 	// document.getElementById("attribute_update_form").style.display = "inline";
 });
+
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace('-', '+').replace('_', '/');
+    return JSON.parse(window.atob(base64));
+};
