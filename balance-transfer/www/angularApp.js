@@ -83,6 +83,7 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------read_attribute
+  //IMPLEMENTED IN WEB APP
   $scope.read_attribute = function(identity_id, target_attr, callback) {
     console.log("read_attribute() is running");
     var token = sessionStorage.getItem("token");
@@ -99,6 +100,7 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------update_attribute
+  //IMPLEMENTED IN WEB APP
   $scope.update_attribute = function(identity_id, target_attr, new_value) {
     console.log("update_attribute() is running");
     var token = sessionStorage.getItem("token");
@@ -113,6 +115,7 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------sign attribute
+  //IMPLEMENTED IN WEB APP
   $scope.sign_attribute = function(identity_id, target_attr, signer_name, signer_company) {
     console.log("sign_attribute() is running");
     var token = sessionStorage.getItem("token");
@@ -140,10 +143,10 @@ app.controller('appController', function($scope, appFactory){
   }
 
   //---------read identity by owner id
-  $scope.read_identity_by_owner_id = function() {
+  //IMPLEMENTED IN WEB APP
+  $scope.read_identity_by_owner_id = function(owner_id) {
     console.log("read_identity_by_owner_id() is running");
     var token = sessionStorage.getItem("token");
-    var owner_id = sessionStorage.getItem("owner_id");
 
     appFactory.read_identity_by_owner_id(owner_id, token, function(txid){
       appFactory.query_by_txid(txid, token, function(data) {
@@ -171,6 +174,7 @@ app.factory('appFactory', function($http){
 
 
     // ================== enrollUser
+    //IMPLEMENTED IN WEB APP
     factory.enrollUser = function(username, org, callback){
       $http({
         method: 'POST',
@@ -193,6 +197,7 @@ app.factory('appFactory', function($http){
     //---------------------------------------------------------------------------------
 
     // ================== init_owner
+    //IMPLEMENTED IN WEB APP
     factory.init_owner = function(owner_id, owner_username, owner_company, token, callback){
       $http({
         method: 'POST',
@@ -213,6 +218,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== init_identity
+    //IMPLEMENTED IN WEB APP
     factory.init_identity = function(identity_id, owner_id, auth_company, attrKey1, attrVal1, attrKey2, attrVal2, attrKey3, attrVal3, token, callback){
       $http({
         method: 'POST',
@@ -233,6 +239,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== read_everything
+    //IMPLEMENTED IN WEB APP
     factory.read_everything = function(token, callback){
       $http({
         method: 'POST',
@@ -253,6 +260,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== read_attribute
+    //IMPLEMENTED IN WEB APP
     factory.read_attribute = function(identity_id, target_attr, token, callback){
       $http({
         method: 'POST',
@@ -273,6 +281,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== update_attribute
+    //IMPLEMENTED IN WEB APP
     factory.update_attribute = function(identity_id, target_attr, new_value, isIssuer, token, callback){
       $http({
         method: 'POST',
@@ -293,6 +302,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== sign_attribute
+    //IMPLEMENTED IN WEB APP
     factory.sign_attribute = function(identity_id, target_attr, signer_name, signer_company, token, callback){
       $http({
         method: 'POST',
@@ -333,6 +343,7 @@ app.factory('appFactory', function($http){
     }
 
     // ================== read_identity_by_owner_id
+    //IMPLEMENTED IN WEB APP
     factory.read_identity_by_owner_id = function(owner_id, token, callback){
       $http({
         method: 'POST',
@@ -369,6 +380,7 @@ app.factory('appFactory', function($http){
     // # echo
 
     // ================== GET QUERY TRANSACTION BY TRANSACTION ID
+    //IMPLEMENTED IN WEB APP
     factory.query_by_txid = function(tx_id, token, callback){
       $http({
         method: 'GET',
