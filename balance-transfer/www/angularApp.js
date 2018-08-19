@@ -17,12 +17,19 @@ app.controller('appController', function($scope, appFactory){
     var username = $scope.username;
     var org = $scope.org;
 
-    appFactory.enrollUser(username, org, function(data){
-        sessionStorage.setItem("token", data);
-        sessionStorage.setItem("username", username);
-        //sessionStorage.setItem("org", org);
-        $scope.token = data;
-    });
+    if (org == "Org3") {
+      var dummyToken = username + "-=-" + org;
+      sessionStorage.setItem("token", dummyToken);
+      sessionStorage.setItem("username", username);
+      $scope.token = dummyToken;
+    } else {
+      appFactory.enrollUser(username, org, function(data){
+          sessionStorage.setItem("token", data);
+          sessionStorage.setItem("username", username);
+          //sessionStorage.setItem("org", org);
+          $scope.token = data;
+      });
+    }
   }
 
   $scope.acceptRequestFromInquisitor = function() {
@@ -110,7 +117,7 @@ app.controller('appController', function($scope, appFactory){
     // var owner_company = $scope.xxx;
 
     appFactory.update_attribute(identity_id, target_attr, new_value, isIssuer, token, function(data){
-      console.log("sign_attribute() success");
+      console.log("update_attribute() success");
     });
   }
 

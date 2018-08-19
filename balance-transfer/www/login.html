@@ -8,6 +8,20 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="css/style.css">
 
+<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBFTYVGvuLSpTkllPrFtU9BAiAAb0qP4E4",
+    authDomain: "my-thesis-349a6.firebaseapp.com",
+    databaseURL: "https://my-thesis-349a6.firebaseio.com",
+    projectId: "my-thesis-349a6",
+    storageBucket: "",
+    messagingSenderId: "90579615549"
+  };
+  firebase.initializeApp(config);
+</script>
+
 <!-- require jquery and bootstrap scripts -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -15,31 +29,34 @@
 
 </head>
 
-<body ng-app="app" ng-controller="appController">
+<body id="appController" ng-app="app" ng-controller="appController">
 <div class="login-form">
-  <form ng-submit="enrollUser()">
+  <form onsubmit="login()">
     <h2 class="text-center">Log in</h2>
     <div class="form-group">
       <input id="username" type="text" class="form-control" ng-model="username" placeholder="Username">
     </div>
     <div class="form-group">
-      <input id="organization" type="text" class="form-control" ng-model="org" placeholder="Organization">
+      <input id="password" type="text" class="form-control" ng-model="password" placeholder="Password">
     </div>
     <div class="form-group">
-      <button type="submit" class="btn btn-primary btn-block" onclick="window.location='/index-user.html';">Log in</button>
+      <!-- <input id="organization" type="text" class="form-control" ng-model="org" placeholder="Organization"> -->
+      <select id="organization" type="text" class="form-control" ng-model="org" placeholder="Organization">
+        <option value="Org1">Identity Owner</option>
+        <option value="Org2">Identity Issuer</option>
+        <option value="Org3">Identity Inquisitor</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <!-- <button type="submit" class="btn btn-primary btn-block" onclick="window.location='/index-user.html';">Log in</button> -->
+      <button type="submit" class="btn btn-primary btn-block">Log in</button>
     </div>
     <p>TOKEN {{token}}</p>
   </form>
 </div>
 </body>
 
-<script type="text/javascript">
-	function login() {
-		var username = document.getElementById("username").value;
-		var org = document.getElementById("organization").value;
-		alert("You are trying to log in as " + username + " from organization " + org);
-	}
-</script>
-
 <script src="angularApp.js"></script>
+<script src="js/login.js"></script>
+
 </html>

@@ -167,3 +167,5 @@ curl -s -X POST \
 }"
 echo
 echo
+
+node populateAuth.js	
