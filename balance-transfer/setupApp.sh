@@ -168,4 +168,4 @@ curl -s -X POST \
 echo
 echo
 
-node populateAuth.js	
+# node populateAuth.js	

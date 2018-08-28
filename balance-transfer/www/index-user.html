@@ -8,6 +8,7 @@
 
 <!-- Bootstrap -->
 <link href="css/bootstrap.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.png">
 
 <script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
 <script>
@@ -35,7 +36,7 @@
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1">Toggle navigation </button>
-			<a class="navbar-brand" href="#">Hyperledger Fabric Identity Application</a>
+			<a class="navbar-brand" href="#">Distributed Identity Management System</a>
 		</div>
     <!-- Collect the nav links, forms, and other content for toggling -->
 <!--
@@ -82,6 +83,7 @@
 	<div class="row">
 		<div class="col-md-6 col-md-offset-3">
 			<h1 class="text-center">Identity Owner</h1>
+      <h4 class="text-center">Anda berperan sebagai <b>pemilik identitas</b>. Anda memiliki <b>kuasa penuh</b> terhadap identitas Anda sendiri</h4>
 		</div>
 	</div>
 	<hr>
@@ -89,7 +91,9 @@
 <div class="container">
 	<div class="init-new-identity-form">
 		<div class="row">
-			<h4>Init New Identity Form</h4>
+			<h4><b>Init New Identity Form<b></h4>
+      <h5>Formulir untuk meminta pembuatan identitas pada STEI ITB</h5>
+      <br>
 		</div>
 		<div class="row">
 			<form role="form" id="init_identity_form" name="init_identity_form" onSubmit="return submitInitIdentityForm()">
@@ -134,7 +138,9 @@
 	<hr>
 	<div class="row">
     <div class="col-md-4">
-      <h4>User Identity</h4>
+      <h4><b>User Identity</b></h4>
+      <h5>Anda bisa melihat dan mengubah identitas Anda disini.</h5>
+      <br>
     </div>
     <div class="col-md-3">
       <button type="button" class="btn btn-sm btn-info" id="refresh_identity" name="button">Refresh</button>
@@ -178,7 +184,10 @@
 	</div>
 	<hr>
 	<div class="row">
-		<h4>Attribute Request</h4>
+		<h4><b>Attribute Request</b></h4>
+    <h5>Tabel ini berisikan daftar pihak yang ingin menggunakan identitas Anda. <b>Silahkan terima atau tolak </b></h5>
+    <br>
+
 	</div>
 	<div class="row">
 		<table id="owner-id-request-table" class="table table-hover table-bordered">

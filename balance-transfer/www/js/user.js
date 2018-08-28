@@ -366,7 +366,7 @@ $(document).on("click", ".accept-inquisitor-request", function() {
 		//get column of attribute key of #owner_attribute table
 		var attrKeyArray = $('#owner_attribute td:nth-child(2)').map(function(){
 
-			return $(this).text().toLowerCase();
+			return $(this).text();
    	}).get();
 		console.log(attrKeyArray);
 		if (attrKeyArray === undefined || attrKeyArray.length == 0) {
