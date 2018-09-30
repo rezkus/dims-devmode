@@ -29,11 +29,11 @@ Sebelum menjalankan program, beberapa persiapan harus dilakukan. Persiapan ini d
   7. Masuk ke dalam project setting dan klik “Add Firebase to your web app”
   8. Salin kode konfigurasi yang diberikan pada layar seluruhnya
   9. Ganti kode konfigurasi yang ada pada file proyek di bawah ini dengan kode konfigurasi Anda (unduh di https://github.com/rezkus/dims-devmode)
-      i. /www/index-user.html
-      ii. /www/index-inquisitor.html
-      iii. /www/index-issuer.html
-      iv. /www/login.html
-      v. /populateAuth.js
+      - /www/index-user.html
+      - /www/index-inquisitor.html
+      - /www/index-issuer.html
+      - /www/login.html
+      - /populateAuth.js
   10. Program siap untuk dijalankan
 
 
@@ -42,20 +42,20 @@ Berikut adalah cara menjalankan DIMS dari komputer baru.
   1. Buka terminal pada Ubuntu 16.04
   2. Masuk ke dalam direktori program yang telah diunduh/clone dari https://github.com/rezkus/dims-devmode
   3. Jalankan perintah “./runApp.sh” pada terminal yang sedang dibuka di direktori terkait. Perintah tersebut akan melakukan:
-      i. Penghapusan kontainer artefak blockchain pada Docker yang sudah dibuat sebelumnya (jika ada)
-      ii. Pembuatan kontainer artefak blockchain yang baru
-      iii. Mengunduh seluruh package npm yang ditulis pada file “package.json”
-      iv. Menjalankan web server pada localhost:4000
+      - Penghapusan kontainer artefak blockchain pada Docker yang sudah dibuat sebelumnya (jika ada)
+      - Pembuatan kontainer artefak blockchain yang baru
+      - Mengunduh seluruh package npm yang ditulis pada file “package.json”
+      - Menjalankan web server pada localhost:4000
   4. Buka terminal baru dan masuk ke direktori yang sama
   5. Jalankan perintah “./setupApp.sh” pada terminal baru yang sedang dibuka di direktori terkait. Perintah tersebut akan melakukan:
-      i. Memasukkan dummy user Jim dari Org1 untuk debugging pada blockchain dengan Fabric CA
-      ii. Memasukkan dummy user Barry dari Org2 untuk debugging pada blockchain dengan Fabric CA
-      iii. Membuat channel bernama “mychannel”
-      iv. Memasukkan Org1 ke dalam channel yang baru saja dibuat
-      v. Memasukkan Org2 ke dalam channel yang baru saja dibuat
-      vi. Melakukan instalasi chaincode pada seluruh peer dari Org1
-      vii. Melakukan instalasi chaincode pada seluruh peer dari Org2
-      viii. Melakukan instantiasi chaincode untuk menghasilkan blok genesis
+      - Memasukkan dummy user Jim dari Org1 untuk debugging pada blockchain dengan Fabric CA
+      - Memasukkan dummy user Barry dari Org2 untuk debugging pada blockchain dengan Fabric CA
+      - Membuat channel bernama “mychannel”
+      - Memasukkan Org1 ke dalam channel yang baru saja dibuat
+      - Memasukkan Org2 ke dalam channel yang baru saja dibuat
+      - Melakukan instalasi chaincode pada seluruh peer dari Org1
+      - Melakukan instalasi chaincode pada seluruh peer dari Org2
+      - Melakukan instantiasi chaincode untuk menghasilkan blok genesis
   6. Setelah proses selesai, jalankan perintah “node populateAuth.js” untuk memasukkan dummy credential ke dalam firebase (Peringatan: Pastikan data credential pada firebase dihapus seluruhnya sebelum mengeksekusi perintah ini)
 
 
