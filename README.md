@@ -57,6 +57,7 @@ Berikut adalah cara menjalankan DIMS dari komputer baru.
       - Melakukan instalasi chaincode pada seluruh peer dari Org2
       - Melakukan instantiasi chaincode untuk menghasilkan blok genesis
   6. Setelah proses selesai, jalankan perintah “node populateAuth.js” untuk memasukkan dummy credential ke dalam firebase (Peringatan: Pastikan data credential pada firebase dihapus seluruhnya sebelum mengeksekusi perintah ini)
+  7. Masuk ke login / dashboard page dengan mengunjungi localhost:4000/login.html (credential login ada di populateAuth.js)
 
 
 ## Penghentian Aplikasi
