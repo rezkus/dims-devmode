@@ -1,4 +1,4 @@
-# DIMS - A SELF-SOVEREIGN DISTRIBUTED IDENTITY MANAGEMENT SYSTEM
+# DIMS - A Self-Sovereign Distributed Identity Management System Using Blockchain
 
 
 ## Instalasi
