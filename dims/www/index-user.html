@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Owner Dashboard</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.png">
+
+<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBFTYVGvuLSpTkllPrFtU9BAiAAb0qP4E4",
+    authDomain: "my-thesis-349a6.firebaseapp.com",
+    databaseURL: "https://my-thesis-349a6.firebaseio.com",
+    projectId: "my-thesis-349a6",
+    storageBucket: "",
+    messagingSenderId: "90579615549"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<!-- require jquery and bootstrap scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+
+</head>
+<body id="appController" ng-app="app" ng-controller="appController">
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1">Toggle navigation </button>
+			<a class="navbar-brand" href="#">Distributed Identity Management System</a>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<h1 class="text-center">Identity Owner</h1>
+      <h4 class="text-center">Anda berperan sebagai <b>pemilik identitas</b>. Anda memiliki <b>kuasa penuh</b> terhadap identitas Anda sendiri</h4>
+		</div>
+	</div>
+	<hr>
+</div>
+<div class="container">
+	<div class="init-new-identity-form">
+		<div class="row">
+			<h4><b>Init New Identity Form<b></h4>
+      <h5>Formulir untuk meminta pembuatan identitas pada STEI ITB</h5>
+      <br>
+		</div>
+		<div class="row">
+			<form role="form" id="init_identity_form" name="init_identity_form" onSubmit="return submitInitIdentityForm()">
+				<div class="form-group col-md-3">
+					<label for="owner-username-input">Username</label>
+					<input readonly class="form-control" id="owner-username-input" name="username" type="text" placeholder="Enter Owner Username">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-company-input">Owner Company</label>
+					<input class="form-control" id="owner-company-input" name="company" type="text" placeholder="Enter Owner Company">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-key-1">Attribute Key #1</label>
+					<input class="form-control" type="text" name="key1" id="owner-attr-key-1" placeholder="Enter Attribute Key #1">
+				</div>
+					<div class="form-group col-md-3">
+					<label for="owner-attr-value-1">Attribute Value #1</label>
+				<input class="form-control" type="text" name="val1" id="owner-attr-value-1" placeholder="Enter Attribute Value #1">
+					</div>
+					<div class="form-group col-md-3">
+				<label for="owner-attr-key-2">Attribute Key #2</label>
+					<input class="form-control" type="text" name="key2" id="owner-attr-key-2" placeholder="Enter Attribute Key #2">
+					</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-value-2">Attribute Value #2</label>
+					<input class="form-control" type="text" name="val2" id="owner-attr-value-2" placeholder="Enter Attribute Value #2">
+				</div>
+					<div class="form-group col-md-3">
+					<label for="owner-attr-key-3">Attribute Key #3</label>
+					<input class="form-control" type="text" name="key3" id="owner-attr-key-3" placeholder="Enter Attribute Key #3">
+				</div>
+				<div class="form-group col-md-3">
+					<label for="owner-attr-value-3">Attribute Value #3</label>
+					<input class="form-control" type="text" name="val3" id="owner-attr-value-3" placeholder="Enter Attribute Value #3">
+				</div>
+				<div class="form-group col-md-3">
+					<button type="submit" class="btn btn-info" id="submitInitIdentityRequest" href="#">Send Request</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+    <div class="col-md-4">
+      <h4><b>User Identity</b></h4>
+      <h5>Anda bisa melihat dan mengubah identitas Anda disini.</h5>
+      <br>
+    </div>
+    <div class="col-md-3">
+      <button type="button" class="btn btn-sm btn-info" id="refresh_identity" name="button">Refresh</button>
+    </div>
+	</div>
+	<div class="row">
+    <div class="col-md-3" id="display_user_identity_id" >
+
+        <h5><b>Identity ID: </b><span id="owner_identity_id">{{owner_identity_id}}</span></h5>
+    </div>
+    <div class="col-md-3" id="display_user_owner_id" >
+
+    </div>
+		<table id="owner_attribute" class="table table-hover table-bordered">
+			<thead>
+				<tr>
+				<th class="col-md-1">No. </th>
+				<th class="col-md-2">Attribute Key</th>
+				<th class="col-md-2">Attribute Value</th>
+        <th class="col-md-4">Attribute Signature</th>
+				<th class="col-md-3">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr class="attribute_table_row" ng-repeat="attribute in owner_attribute">
+					<td class="attribute_index">{{attribute.index}}</td>
+					<td class="attribute_key">{{attribute.IDKey}}</td>
+					<td class="attribute_value">{{attribute.IDValue}}</td>
+          <td class="attribute_signature">{{attribute.IDSignature}}</td>
+					<td class="attribute_action_button">
+						<form role="form" class="attribute_update_form" style="display:none">
+							<input type="text" class="new_attr_value form-inline" placeholder="Enter new value">
+							<input type="submit" class="new_attr_submit">
+						</form>
+						<button type="button" class="attribute_update_button btn btn-sm btn-primary">Update Value</button>
+						<button type="button" class="attribute_sign_button btn btn-sm btn-info">Request Sign</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="row">
+		<h4><b>Attribute Request</b></h4>
+    <h5>Tabel ini berisikan daftar pihak yang ingin menggunakan identitas Anda. <b>Silahkan terima atau tolak </b></h5>
+    <br>
+
+	</div>
+	<div class="row">
+		<table id="owner-id-request-table" class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th class="col-md-1">No.</th>
+          <th class="col-md-2">Request Time</th>
+					<th class="col-md-2">Attribute</th>
+					<th class="col-md-2">Requester</th>
+          <th class="col-md-3">Detail</th>
+					<th class="col-md-2">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="text-center col-md-6 col-md-offset-3">
+			<p>Copyright &copy; 2018 &middot; Developed by Rezha Kusuma</p>
+		</div>
+	</div>
+</div>
+
+<script src="angularApp.js"></script>
+<script src="js/user.js"></script>
+
+</body>
+</html>

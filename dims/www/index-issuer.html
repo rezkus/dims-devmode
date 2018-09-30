@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Issuer Dashboard</title>
+
+<!-- Bootstrap -->
+<link href="css/bootstrap.css" rel="stylesheet">
+<link rel="shortcut icon" href="favicon.png">
+
+<script src="https://www.gstatic.com/firebasejs/5.3.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyBFTYVGvuLSpTkllPrFtU9BAiAAb0qP4E4",
+    authDomain: "my-thesis-349a6.firebaseapp.com",
+    databaseURL: "https://my-thesis-349a6.firebaseio.com",
+    projectId: "my-thesis-349a6",
+    storageBucket: "",
+    messagingSenderId: "90579615549"
+  };
+  firebase.initializeApp(config);
+</script>
+
+<!-- require jquery and bootstrap scripts -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.js"></script>
+
+</head>
+<body id="appController" ng-app="app" ng-controller="appController">
+<nav class="navbar navbar-inverse">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#defaultNavbar1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">Distributed Identity Management System</a>
+		</div>
+	</div>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<h1 class="text-center">Identity Issuer</h1>
+      <h4 class="text-center">Anda berperan sebagai pihak yang <b>menyetujui pembuatan atau perubahan identitas</b></h4>
+		</div>
+	</div>
+	<hr>
+</div>
+<div class="container">
+	<div class="row">
+		<h4><b>Identity Creation Request</b></h4>
+    <h5>Tabel ini berisikan daftar request pembuatan identitas. <b>Silahkan terima atau tolak</b></h5>
+    <br>
+	</div>
+	<div class="row">
+		<table id="identity-creation-table" class="table table-hover table-bordered table-responsive">
+			<thead>
+				<tr>
+				<th>No.</th>
+        <th>Request Date</th>
+				<th>Owner ID</th>
+				<th>Owner Name</th>
+				<th>Owner Company</th>
+				<th>Identity ID</th>
+				<th>Attr. Key #1</th>
+				<th>Attr. Value #1</th>
+				<th>Attr. Key #2</th>
+				<th>Attr. Value #2</th>
+				<th>Attr. Key #3</th>
+				<th>Attr. Value #3</th>
+				<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="row">
+		<h4><b>Identity Change Request</b></h4>
+    <h5>Tabel ini berisikan daftar request pengubahan nilai atribut identitas. <b>Silahkan terima atau tolak</b></h5>
+    <br>
+	</div>
+	<div class="row">
+		<table id="identity_change_request_table" class="table table-hover table-bordered">
+			<thead>
+				<tr>
+					<th class="col-md-1">No.</th>
+          <th class="col-md-2">Request Time</th>
+          <th class="col-md-2">Identity ID</th>
+					<th class="col-md-2">Attribute Key</th>
+					<th class="col-md-1">Type</th>
+					<th class="col-md-2">Attribute New Value</th>
+					<th class="col-md-2">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="text-center col-md-6 col-md-offset-3">
+			<p>Copyright &copy; 2018 &middot; Developed by Rezha Kusuma</p>
+		</div>
+	</div>
+</div>
+
+<script src="angularApp.js"></script>
+<script src="js/issuer.js"></script>
+
+</body>
+</html>
