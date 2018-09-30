@@ -1,13 +1,13 @@
 var firebase = require("firebase");
 
 var config = {
-  apiKey: "AIzaSyBFTYVGvuLSpTkllPrFtU9BAiAAb0qP4E4",
-  authDomain: "my-thesis-349a6.firebaseapp.com",
-  databaseURL: "https://my-thesis-349a6.firebaseio.com",
-  projectId: "my-thesis-349a6",
-  storageBucket: "",
-  messagingSenderId: "90579615549"
-};
+    apiKey: <SOME API KEY>,
+    authDomain: <SOME AUTH DOMAIN>,
+    databaseURL: <SOME DATABASE URL>,
+    projectId: <SOME PROJECT ID>,
+    storageBucket: <SOME STORAGE BUCKET>,
+    messagingSenderId: <SOME MESSAGING SENDER ID>
+  };
 firebase.initializeApp(config);
 
 
