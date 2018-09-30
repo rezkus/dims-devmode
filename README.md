@@ -1,6 +1,6 @@
-#DIMS
+# DIMS
 
-###Instalasi
+### Instalasi
 
 Instruksi lebih detail dapat diakses di https://www.edx.org/course/blockchain-business-introduction-linuxfoundationx-lfs171x-0 pada bab 4 dan bab 7.
 
@@ -17,8 +17,7 @@ Berikut adalah perangkat lunak yang harus dipersiapkan untuk menjalankan DIMS pa
 * Docker CE 18.03
 * Docker Compose 1.9.0
 
-###Persiapan
-
+### Persiapan
 Sebelum menjalankan program, beberapa persiapan harus dilakukan. Persiapan ini dilakukan hanya sekali dan terkait penggantian akun firebase yang dilakukan pada aplikasi. **Setelah mengikuti langkah ini, database realtime bisa Anda akses di console Firebase Anda**. Berikut adalah langkah yang harus dilakukan untuk mengganti akun firebase ke akun Anda.
   1. Buka http://firebase.google.com
   2. Log in ke dalam akun Firebase Anda
@@ -36,8 +35,7 @@ Sebelum menjalankan program, beberapa persiapan harus dilakukan. Persiapan ini d
       v. /populateAuth.js
   10. Program siap untuk dijalankan
 
-###Operasi
-
+### Operasi
 Berikut adalah cara menjalankan DIMS dari komputer baru.
   1. Buka terminal pada Ubuntu 16.04
   2. Masuk ke dalam direktori program yang telah diunduh/clone dari https://github.com/rezkus/dims-devmode
@@ -58,8 +56,7 @@ Berikut adalah cara menjalankan DIMS dari komputer baru.
       viii. Melakukan instantiasi chaincode untuk menghasilkan blok genesis
   6. Setelah proses selesai, jalankan perintah “node populateAuth.js” untuk memasukkan dummy credential ke dalam firebase (Peringatan: Pastikan data credential pada firebase dihapus seluruhnya sebelum mengeksekusi perintah ini)
 
-###Penghentian Aplikasi
-
+### Penghentian Aplikasi
 Berikut adalah hal yang harus dilakukan jika ingin memberhentikan aplikasi dari bekerja
   1. Tekan Ctrl+C pada terminal tempat dijalankan perintah “./runApp.sh”. Aplikasi web dan blockchain akan dimatikan
   2. Hapus seluruh data di realtime database pada Firebase untuk mencegah duplikasi dan eror ketika sistem dijalankan kembali
